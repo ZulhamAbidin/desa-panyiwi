@@ -24,8 +24,8 @@ if ($result && $result->num_rows > 0) {
 
         $actionColumn = '<a href="edit.php?id=' . $row['id'] . '" class="btn btn-sm btn-primary" role="button">
                             <i class="fe fe-edit me-1"></i>Edit
-                         </a>
-                         <button class="btn btn-sm btn-danger delete-btn" data-id="' . $row['id'] . '" data-uraian="' . htmlspecialchars($row['uraian'], ENT_QUOTES) . '">
+                         </a> 
+                         <button class="mt-2 btn btn-sm btn-danger delete-btn" data-id="' . $row['id'] . '" data-uraian="' . htmlspecialchars($row['uraian'], ENT_QUOTES) . '">
                             <i class="fe fe-trash me-1"></i>Delete
                          </button>';
 

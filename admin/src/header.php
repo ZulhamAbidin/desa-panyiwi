@@ -150,7 +150,7 @@ $dt     = mysqli_fetch_array($ambil);
                             </li>
 
                             <li class="sub-category">
-                                <h3>Pengelolaan Keuangan</h3>
+                                <h3>Keuangan</h3>
                             </li>
 
                             <li>
@@ -161,9 +161,26 @@ $dt     = mysqli_fetch_array($ambil);
                                 <a class="side-menu__item has-link" href="tambah.php"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">Tambah Data Keuangan</span></a>
                             </li>
 
+                            <li class="sub-category">
+                                <h3>Kategori</h3>
+                            </li>
+
+                            <li>
+                                <a class="side-menu__item has-link" href="kategori_list.php"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">Kategori List</span></a>
+                            </li>
+
+                            <li>
+                                <a class="side-menu__item has-link" href="kategori_tambah.php"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">Kategori Tambah</span></a>
+                            </li>
+
+                            <li class="sub-category">
+                                <h3>Cetak</h3>
+                            </li>
+
                             <li>
                                 <a class="side-menu__item has-link" href="cetak_laporan.php"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">Cetak Laporan</span></a>
                             </li>
+
                             
                             <!-- <li class="slide">
                                 <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
@@ -178,7 +195,7 @@ $dt     = mysqli_fetch_array($ambil);
                             </li> -->
 
                             <li class="sub-category">
-                                <h3>GENERAL</h3>
+                                <h3>Lainya</h3>
                             </li>
 
                             <li>
