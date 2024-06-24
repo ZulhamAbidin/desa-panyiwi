@@ -1,5 +1,33 @@
 <?php include 'src/header.php'; ?>
 
+<?php
+if (isset($_SESSION['success_message'])) {
+    echo '
+    <script>
+    $(document).ready(function() {
+        var toastSuccess = new bootstrap.Toast(document.getElementById("toastSuccess"));
+        $(".toast-body", toastSuccess.element).text("' . $_SESSION['success_message'] . '");
+        toastSuccess.show();
+    });
+    </script>
+    ';
+    unset($_SESSION['success_message']);
+}
+
+if (isset($_SESSION['error_message'])) {
+    echo '
+    <script>
+    $(document).ready(function() {
+        var toastError = new bootstrap.Toast(document.getElementById("toastError"));
+        $(".toast-body", toastError.element).text("' . $_SESSION['error_message'] . '");
+        toastError.show();
+    });
+    </script>
+    ';
+    unset($_SESSION['error_message']);
+}
+?>
+
 <div class="page-header">
     <h1 class="page-title">List Data Keuangan</h1>
     <div>
@@ -23,52 +51,45 @@
                     <th>Periode</th>
                     <th>Kategori</th>
                     <th>Action</th>
+                    <th>Gambar</th>
                 </tr>
             </thead>
             <tbody>
-                <?php
-                $query = "SELECT lk.id, lk.uraian, lk.ref, lk.anggaran, lk.realisasi, lk.selisih, lk.periode, k.nama_kategori
-                          FROM laporan_keuangan lk
-                          LEFT JOIN laporan_kategori lktr ON lk.id = lktr.laporan_id
-                          LEFT JOIN kategori k ON lktr.kategori_id = k.id";
-                $result = $koneksi->query($query);
-
-                if ($result && $result->num_rows > 0) {
-                    $no = 1;
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>{$no}</td>";
-                        echo "<td>{$row['uraian']}</td>";
-                        echo "<td>{$row['ref']}</td>";
-                        echo "<td>Rp. " . number_format($row['anggaran'], 0, ',', '.') . "</td>";
-                        echo "<td>Rp. " . number_format($row['realisasi'], 0, ',', '.') . "</td>";
-                        echo "<td>Rp. " . number_format($row['selisih'], 0, ',', '.') . "</td>";
-                        echo "<td>{$row['periode']}</td>";
-                        echo "<td>{$row['nama_kategori']}</td>";
-                        echo "<td>
-                                <button class='btn btn-sm btn-danger delete-btn' data-id='{$row['id']}' data-uraian='{$row['uraian']}'>
-                                    <i class='fe fe-trash me-1'></i>Delete
-                                </button>
-                              </td>";
-                        echo "</tr>";
-                        $no++;
-                    }
-                } else {
-                    echo "<tr><td colspan='9'>Tidak ada data keuangan tersedia</td></tr>";
-                }
-                ?>
             </tbody>
         </table>
     </div>
 </div>
 
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Gambar Detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="" id="modalImage" class="img-fluid">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    $(document).ready(function () {
+        $('#dataKeuangan').on('click', '.view-image', function () {
+            var imageSrc = $(this).data('image');
+            $('#modalImage').attr('src', 'gambar/' + imageSrc);
+        });
+    });
+</script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
 <script>
     $(document).ready(function () {
         var table = $('#dataKeuangan').DataTable({
@@ -78,20 +99,44 @@
             "lengthMenu": [5, 10, 25, 50, 100],
             "pageLength": 10,
             "ajax": {
-                "url": "controller/get-data.php", 
+                "url": "controller/get-data.php",
                 "type": "POST",
                 "dataSrc": ""
             },
-            "columns": [
-                { "data": "No" },
-                { "data": "Uraian" },
-                { "data": "Ref" },
-                { "data": "Anggaran" },
-                { "data": "Realisasi" },
-                { "data": "Selisih" },
-                { "data": "Periode" },
-                { "data": "Kategori" },
-                { "data": "Action" }
+            "columns": [{
+                    "data": "No"
+                },
+                {
+                    "data": "Uraian"
+                },
+                {
+                    "data": "Ref"
+                },
+                {
+                    "data": "Anggaran"
+                },
+                {
+                    "data": "Realisasi"
+                },
+                {
+                    "data": "Selisih"
+                },
+                {
+                    "data": "Periode"
+                },
+                {
+                    "data": "Kategori"
+                },
+                {
+                    "data": "Action"
+                },
+                {
+                    "data": "Gambar",
+                    "render": function (data, type, row) {
+                        return '<button type="button" class="btn btn-link view-image" data-bs-toggle="modal" data-bs-target="#imageModal" data-image="' +
+                            data + '"><i class="bi bi-eye"></i></button> ';
+                    }
+                }
             ]
         });
 
@@ -113,7 +158,9 @@
                     $.ajax({
                         type: 'POST',
                         url: 'controller/delete_data.php',
-                        data: { id: id },
+                        data: {
+                            id: id
+                        },
                         dataType: 'json',
                         success: function (response) {
                             if (response.status === 'success') {
@@ -144,6 +191,4 @@
         });
     });
 </script>
-
-
 <?php include 'src/footer.php'; ?>

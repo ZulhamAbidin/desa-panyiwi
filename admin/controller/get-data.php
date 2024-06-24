@@ -1,7 +1,7 @@
 <?php
 include '../koneksi.php';
 
-$query = "SELECT lk.id, lk.uraian, lk.ref, lk.anggaran, lk.realisasi, lk.selisih, lk.periode, k.nama_kategori
+$query = "SELECT lk.id, lk.uraian, lk.ref, lk.anggaran, lk.realisasi, lk.periode, lk.gambar, k.nama_kategori
           FROM laporan_keuangan lk
           LEFT JOIN laporan_kategori lktr ON lk.id = lktr.laporan_id
           LEFT JOIN kategori k ON lktr.kategori_id = k.id";
@@ -15,13 +15,19 @@ if ($result && $result->num_rows > 0) {
         $selisih = $row['realisasi'] - $row['anggaran'];
         $formattedAnggaran = 'Rp. ' . number_format($row['anggaran'], 0, ',', '.');
         $formattedRealisasi = 'Rp. ' . number_format($row['realisasi'], 0, ',', '.');
-
-        $formattedSelisih = 'Rp. ' . number_format(abs($selisih), 0, ',', '');
+        $formattedSelisih = 'Rp. ' . number_format(abs($selisih), 0, ',', '.');
         if ($selisih < 0) {
-            $formattedSelisih = '+ ' . $formattedSelisih;
-        } else {
             $formattedSelisih = '- ' . $formattedSelisih;
+        } else {
+            $formattedSelisih = '+ ' . $formattedSelisih;
         }
+
+        $actionColumn = '<a href="edit.php?id=' . $row['id'] . '" class="btn btn-sm btn-primary" role="button">
+                            <i class="fe fe-edit me-1"></i>Edit
+                         </a>
+                         <button class="btn btn-sm btn-danger delete-btn" data-id="' . $row['id'] . '" data-uraian="' . htmlspecialchars($row['uraian'], ENT_QUOTES) . '">
+                            <i class="fe fe-trash me-1"></i>Delete
+                         </button>';
 
         $data[] = [
             'No' => $no,
@@ -32,9 +38,8 @@ if ($result && $result->num_rows > 0) {
             'Selisih' => $formattedSelisih,
             'Periode' => $row['periode'],
             'Kategori' => $row['nama_kategori'],
-            'Action' => '<button class="btn btn-sm btn-danger delete-btn" data-id="' . $row['id'] . '" data-uraian="' . htmlspecialchars($row['uraian'], ENT_QUOTES) . '">
-                            <i class="fe fe-trash me-1"></i>Delete
-                         </button>'
+            'Gambar' => $row['gambar'],
+            'Action' => $actionColumn // Kolom action dengan tombol "Edit" dan "Delete"
         ];
         $no++;
     }

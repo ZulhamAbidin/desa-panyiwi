@@ -199,3 +199,24 @@ $dt     = mysqli_fetch_array($ambil);
             <div class="main-content app-content mt-0">
                 <div class="side-app">
                     <div class="main-container container-fluid">
+                    
+                        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+                            <div id="toastSuccess" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div class="toast-header bg-primary text-white">
+                                    <strong class="me-auto">Berhasil!</strong>
+                                    <button type="button" class="btn-close text-white btn-primay" data-bs-dismiss="toast" aria-label="Close"></button>
+                                </div>
+                                <div class="toast-body">
+                                    <!-- Tempat untuk menampilkan pesan sukses -->
+                                </div>
+                            </div>
+                            <div id="toastError" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div class="toast-header bg-danger text-white">
+                                    <strong class="me-auto">Kesalahan!</strong>
+                                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                </div>
+                                <div class="toast-body">
+                                    <!-- Tempat untuk menampilkan pesan kesalahan -->
+                                </div>
+                            </div>
+                        </div>

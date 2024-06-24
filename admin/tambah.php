@@ -16,7 +16,7 @@ function formatRupiahToNumber($rupiah)
     return (int) preg_replace('/[^0-9]/', '', $rupiah);
 }
 
-function simpanLaporanKeuangan($uraian, $ref, $anggaran, $realisasi, $selisih, $periode, $kategori_id)
+function simpanLaporanKeuangan($uraian, $ref, $anggaran, $realisasi, $selisih, $periode, $kategori_id, $gambar)
 {
     global $koneksi;
 
@@ -27,9 +27,22 @@ function simpanLaporanKeuangan($uraian, $ref, $anggaran, $realisasi, $selisih, $
     $selisih = formatRupiahToNumber($selisih);
     $periode = mysqli_real_escape_string($koneksi, $periode);
     $kategori_id = (int) $kategori_id;
+    $gambarPath = null;
+    if ($gambar['error'] === UPLOAD_ERR_OK) {
+        $filename = uniqid('gambar_') . '.' . pathinfo($gambar['name'], PATHINFO_EXTENSION);
+        $targetDir = 'admin/gambar/';
+        $targetPath = __DIR__ . '/../' . $targetDir . $filename;
+    
+        if (move_uploaded_file($gambar['tmp_name'], $targetPath)) {
+            $gambarPath = $filename;
+        } else {
+            echo "Gagal mengunggah gambar. Silakan coba lagi.";
+            return false;
+        }
+    }
 
-    $sql = "INSERT INTO laporan_keuangan (uraian, ref, anggaran, realisasi, selisih, periode) 
-            VALUES ('$uraian', '$ref', $anggaran, $realisasi, $selisih, '$periode')";
+    $sql = "INSERT INTO laporan_keuangan (uraian, ref, anggaran, realisasi, selisih, periode, gambar) 
+            VALUES ('$uraian', '$ref', $anggaran, $realisasi, $selisih, '$periode', '$gambarPath')";
 
     if ($koneksi->query($sql) === true) {
         $laporan_id = $koneksi->insert_id;
@@ -56,18 +69,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $selisih = $_POST['selisih'];
     $periode = $_POST['periode'];
     $kategori_id = $_POST['kategori_id'];
-
-    $sukses = simpanLaporanKeuangan($uraian, $ref, $anggaran, $realisasi, $selisih, $periode, $kategori_id);
+    $gambar = $_FILES['gambar'];
+    $sukses = simpanLaporanKeuangan($uraian, $ref, $anggaran, $realisasi, $selisih, $periode, $kategori_id, $gambar);
 
     if ($sukses) {
-        session_start();
-        $_SESSION['success'] = "Laporan keuangan berhasil disimpan";
-        header("Location: list.php");
-        exit();
+        $_SESSION['success_message'] = "Laporan keuangan berhasil disimpan";
     } else {
-        echo "<script>alert('Gagal menyimpan laporan keuangan');</script>";
+        $_SESSION['error_message'] = "Gagal menyimpan laporan keuangan";
     }
-    
+    header("Location: list.php");
+    exit();
 }
 ?>
 
@@ -77,59 +88,67 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div class="card">
     <div class="card-body">
-        <div class="row">
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
 
-                <div class="form-group">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"
+            enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-12 col-md-12 mb-4">
                     <label for="uraian">Uraian:</label>
-                    <input type="text" class="form-control" id="uraian" name="uraian"
-                        placeholder="Contoh : Bagi Hasil Pajak dan Retribusi" required>
+                    <!-- <input type="text" class="form-control" id="uraian" name="uraian" placeholder="Contoh : Bagi Hasil Pajak dan Retribusi" required> -->
+                    <textarea class="form-control" rows="4" name="uraian" id="uraian" required></textarea>
                 </div>
 
-                <!-- <div class="form-group">
+                <!-- <div class="col-12 col-md-6">
                     <label for="ref">Ref:</label>
                     <input type="text" class="form-control" id="ref" name="ref">
                 </div> -->
 
-                <div class="form-group">
+                <div class="col-12 col-md-6 mb-4">
                     <label for="anggaran">Anggaran:</label>
                     <input type="text" class="form-control" id="anggaran" name="anggaran"
                         placeholder="Contoh : Rp. 1.000.000" required>
                 </div>
 
-                <div class="form-group">
+                <div class="col-12 col-md-6 mb-4">
                     <label for="realisasi">Realisasi:</label>
                     <input type="text" class="form-control" id="realisasi" name="realisasi"
                         placeholder="Contoh : Rp. 500.000" required>
                 </div>
 
-                <div class="form-group">
+                <div class="col-12 col-md-6 mb-4">
                     <label for="selisih">Selisih:</label>
                     <input type="text" class="form-control" placeholder="Otomatis" id="selisih" name="selisih" readonly>
                 </div>
 
-                <div class="form-group">
+                <div class="col-12 col-md-6 mb-4">
                     <label for="periode">Periode:</label>
                     <input type="date" class="form-control" id="periode" name="periode" placeholder="" required>
                 </div>
 
-                <div class="form-group">
+                <div class="col-12 col-md-6 mb-4">
                     <label for="kategori">Kategori:</label>
                     <select class="form-control" id="kategori" name="kategori_id" placeholder="" required>
                         <?php foreach ($kategoriList as $kategori) : ?>
-                            <option value="<?php echo $kategori['id']; ?>"><?php echo $kategori['nama_kategori']; ?></option>
+                        <option value="<?php echo $kategori['id']; ?>"><?php echo $kategori['nama_kategori']; ?>
+                        </option>
                         <?php endforeach; ?>
                     </select>
                     <!-- <a href="tambahh_kategori.php" class="">Tambah Kategori</a> -->
                 </div>
 
-                <button type="submit" class="btn btn-primary">Simpan</button>
-            </form>
-        </div>
+                <div class="col-12 col-md-6 mb-4">
+                    <label for="gambar">Gambar:</label>
+                    <input type="file" class="form-control" id="gambar" name="gambar" accept="image/*" required>
+                </div>
+
+                <div class="col-12 col-md-12 text-end mb-4">
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+
+            </div>
+        </form>
     </div>
 </div>
-
-<!-- Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio unde qui rem cupiditate? A dolorem illum itaque eaque consectetur impedit, ullam, doloribus recusandae quae reiciendis quasi enim, officiis neque beatae! -->
 
 <script>
     var anggaranInput = document.getElementById("anggaran");
@@ -149,7 +168,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         hitungSelisih();
     }
 
-    // Fungsi untuk menghitung dan menampilkan selisih
     function hitungSelisih() {
         var anggaran = parseFloat(anggaranInput.value.replace(/[^\d]/g, ""));
         var realisasi = parseFloat(realisasiInput.value.replace(/[^\d]/g, ""));
@@ -166,28 +184,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     function formatRupiah(angka, prefix) {
-    var number_string = angka.toString().replace(/[^,\d]/g, "");
-    var split = number_string.split(",");
-    var sisa = split[0].length % 3;
-    var rupiah = split[0].substr(0, sisa);
-    var ribuan = split[0].substr(sisa).match(/\d{3}/g);
+        var number_string = angka.toString().replace(/[^,\d]/g, "");
+        var split = number_string.split(",");
+        var sisa = split[0].length % 3;
+        var rupiah = split[0].substr(0, sisa);
+        var ribuan = split[0].substr(sisa).match(/\d{3}/g);
 
-    if (ribuan) {
-        var separator = sisa ? "." : "";
-        rupiah += separator + ribuan.join(".");
+        if (ribuan) {
+            var separator = sisa ? "." : "";
+            rupiah += separator + ribuan.join(".");
+        }
+
+        rupiah = split[1] !== undefined ? rupiah + "," + split[1] : rupiah;
+
+        return prefix === undefined ? (rupiah ? "Rp. " + rupiah : "") : (rupiah ? prefix + rupiah : "");
     }
-
-    rupiah = split[1] !== undefined ? rupiah + "," + split[1] : rupiah;
-    
-    return prefix === undefined ? (rupiah ? "Rp. " + rupiah : "") : (rupiah ? prefix + rupiah : "");
-}
-
 </script>
 
-
-
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
-<script src="../sash/js/jquery.min.js"></script>
 <?php include 'src/footer.php'; ?>
