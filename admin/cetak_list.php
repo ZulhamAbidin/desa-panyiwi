@@ -17,17 +17,56 @@ $kategoris = $result->fetch_all(MYSQLI_ASSOC);
 </div>
 
 <div class="card">
+    <!-- Cetak Berdasarkan Kategori -->
     <div class="card-body">
+        <div class="mb-5 text-center fw-bold"> Cetak Berdasarkan Kategori</div>
         <form action="controller/proses_cetak_laporan.php" method="post" id="cetak-laporan-form">
             <div class="form-group" id="kategori-list">
                 <label>Pilih Kategori:</label><br>
-                <?php foreach ($kategoris as $kategori) : ?>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="kategori_<?php echo $kategori['id']; ?>" name="kategori[]" value="<?php echo $kategori['id']; ?>">
-                        <label class="form-check-label" for="kategori_<?php echo $kategori['id']; ?>"><?php echo $kategori['nama_kategori']; ?></label>
-                    </div>
-                <?php endforeach; ?>
+                <div class="row">
+                    <?php foreach ($kategoris as $kategori) : ?>
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="kategori_<?php echo $kategori['id']; ?>" name="kategori[]" value="<?php echo $kategori['id']; ?>">
+                                <label class="form-check-label" for="kategori_<?php echo $kategori['id']; ?>"><?php echo $kategori['nama_kategori']; ?></label>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
+
+            <div class="form-group">
+                <label for="start_date">Tanggal Mulai:</label>
+                <input type="date" class="form-control" id="start_date" name="start_date" required>
+            </div>
+            <div class="form-group">
+                <label for="end_date">Tanggal Akhir:</label>
+                <input type="date" class="form-control" id="end_date" name="end_date" required>
+            </div>
+            <button type="submit" id="submit-btn" class="btn btn-primary">Cetak Laporan</button>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <!-- Cetak Custom Selected -->
+    <div class="card-body mt-4">
+        <div class="mb-5 text-center fw-bold"> Cetak Berdasarkan Yang Dipilih</div>
+        <form action="controller/proses_cetak_laporan.php" method="post" id="cetak-laporan-form">
+            <div class="form-group" id="kategori-list">
+                <label>Pilih Kategori:</label><br>
+                <div class="row">
+                    <?php foreach ($kategoris as $kategori) : ?>
+                        <div class="col-auto">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="kategori_<?php echo $kategori['id']; ?>" name="kategori[]" value="<?php echo $kategori['id']; ?>">
+                                <label class="form-check-label" for="kategori_<?php echo $kategori['id']; ?>"><?php echo $kategori['nama_kategori']; ?></label>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="start_date">Tanggal Mulai:</label>
                 <input type="date" class="form-control" id="start_date" name="start_date" required>
@@ -42,6 +81,8 @@ $kategoris = $result->fetch_all(MYSQLI_ASSOC);
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Cetak Berdasarkan Kategori -->
 <script>
     $(document).ready(function () {
         $('#cetak-laporan-form').submit(function (event) {
@@ -59,5 +100,7 @@ $kategoris = $result->fetch_all(MYSQLI_ASSOC);
         });
     });
 </script>
+
+<!-- Cetak Berdasarkan Selected -->
 
 <?php include 'src/footer.php'; ?>

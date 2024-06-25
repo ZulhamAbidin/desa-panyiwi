@@ -48,9 +48,9 @@
                         </div>
                     </div>
                     <div class="table-responsive push">
-                        <table class="table table-bordered table-hover mb-0 text-nowrap">
+                        <table class="table table-bordered ">
                             <tbody>
-                                <tr class=" ">
+                                <tr >
                                     <th class="text-center"></th>
                                     <th>Uraian Atau Keterangan</th>
                                     <th class="text-center">Ref</th>
