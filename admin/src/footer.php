@@ -48,6 +48,8 @@
 
     </script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
+    <!-- MULTI SELECT JS-->
+    
     <script src="../sash/plugins/datatable/js/dataTables.bootstrap5.js"></script>
     <script src="../sash/plugins/datatable/js/dataTables.buttons.min.js"></script>
     <script src="../sash/plugins/datatable/js/buttons.bootstrap5.min.js"></script>
@@ -72,7 +74,9 @@
     <script src="../sash/plugins/chart/Chart.bundle.js"></script>
     <script src="../sash/plugins/chart/rounded-barchart.js"></script>
     <script src="../sash/plugins/chart/utils.js"></script>
-    <script src="../sash/plugins/select2/select2.full.min.js"></script>
+
+    <!-- <script src="../sash/plugins/select2/select2.full.min.js"></script> -->
+    
     <script src="../sash/plugins/datatable/dataTables.responsive.min.js"></script>
     <script src="../sash/js/apexcharts.js"></script>
     <script src="../sash/plugins/apexchart/irregular-data-series.js"></script>

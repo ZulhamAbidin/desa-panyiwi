@@ -39,6 +39,7 @@ $dt     = mysqli_fetch_array($ambil);
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="app sidebar-mini ltr light-mode">
     <div class="page">
@@ -178,7 +179,7 @@ $dt     = mysqli_fetch_array($ambil);
                             </li>
 
                             <li>
-                                <a class="side-menu__item has-link" href="cetak_laporan.php"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">Cetak Laporan</span></a>
+                                <a class="side-menu__item has-link" href="cetak_list.php"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">Cetak Laporan</span></a>
                             </li>
 
                             
