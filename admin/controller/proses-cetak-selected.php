@@ -49,13 +49,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_ids'])) {
     <style>
         @media print {
             body {
-                margin-top: 150px !important;
                 padding: 0;
+                height: 100%;
                 color: black !important;
+            }
+            .container {
+                height: 100%;
             }
             
             .xxx {
                 color: black !important;
+            }
+            .bg-primary
+            {color: black !important;
+                
             }
 
             .cetak {
@@ -264,6 +271,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_ids'])) {
                                 </div>
                             </div>
 
+                            <div class="page-header hidden-cetak">
+                                <a href="../cetak_list.php" class="btn btn-primary"><i class="si si-arrow-left pe-2"></i>Kembali</a>
+                                <button type="button" class="btn btn-primary" onclick="printDiv();"><i class="si si-printer pe-2"></i>Cetak</button>
+                            </div>
+
                             <div class="row cetak">
                                 <div class="col-md-12">
                                     <div class="card">
@@ -333,10 +345,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_ids'])) {
                                                     </tbody>
                                                 </table>
                                             </div>
-                                        </div>
-                                        <div class="card-footer d-flex justify-content-between">
-                                            <a href="../cetak_list.php" class="btn btn-primary"><i class="si si-arrow-left pe-2"></i>Kembali</a>
-                                            <button type="button" class="btn btn-primary" onclick="printDiv();"><i class="si si-printer pe-2"></i>Cetak</button>
                                         </div>
                                     </div>
                                 </div>

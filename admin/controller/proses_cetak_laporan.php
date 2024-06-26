@@ -55,25 +55,40 @@ function translateDay($englishDay) {
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-    @media print {
-        .cetak {
-            margin-top: 1150px !important;
-            height: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            bottom: 0 !important;
+        @media print {
+            body {
+                padding: 0;
+                height: 100%;
+                color: black !important;
+            }
+            .container {
+                height: 100%;
+            }
+            
+            .xxx {
+                color: black !important;
+            }
+            .bg-primary
+            {color: black !important;
+                
+            }
+
+            .cetak {
+                margin: 0;
+                padding: 10px;
+                background-color: #fff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .btn {
+                display: none;
+            }
+
+            .hidden-cetak {
+                display: none;
+            }
         }
-    }
-</style>
-<script>
-    function printDiv() {
-        var printContents = document.querySelector('.cetak').innerHTML;
-        var originalContents = document.body.innerHTML;
-        document.body.innerHTML = printContents;
-        window.print();
-        document.body.innerHTML = originalContents;
-    }
-</script>
+    </style>
 </head>
 <body class="app sidebar-mini ltr light-mode">
     <div class="page">
@@ -263,11 +278,11 @@ function translateDay($englishDay) {
 
             <div class="main-content app-content mt-0">
                 <div class="side-app">
-                    <div class="main-container container-fluid ">
+                    <div class="main-container container-fluid cetak">
 
                         <div class="container ">
 
-                            <div class="page-header">
+                            <div class="page-header hidden-cetak">
                                 <h1 class="page-title">Cetak</h1>
                                 <div>
                                     <ol class="breadcrumb">
@@ -277,142 +292,149 @@ function translateDay($englishDay) {
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <?php
+
+                                function getLaporan($koneksi, $kategori, $start_date, $end_date)
+                                {
+                                    if (empty($kategori)) {
+                                        $query = "SELECT lk.*, l.nama_kategori 
+                                                FROM laporan_keuangan lk
+                                                WHERE lk.periode BETWEEN '$start_date' AND '$end_date'";
+                                    } else {
+                                        $kategori_ids = implode(',', $kategori);
+                                        $query = "SELECT lk.*, l.nama_kategori 
+                                                FROM laporan_keuangan lk
+                                                INNER JOIN laporan_kategori lk_cat ON lk.id = lk_cat.laporan_id
+                                                INNER JOIN kategori l ON lk_cat.kategori_id = l.id
+                                                WHERE lk_cat.kategori_id IN ($kategori_ids)
+                                                AND lk.periode BETWEEN '$start_date' AND '$end_date'";
+                                    }
+
+                                    $result = $koneksi->query($query);
+
+                                    if ($result) {
+                                        return $result->fetch_all(MYSQLI_ASSOC);
+                                    } else {
+                                        return null;
+                                    }
+                                }
+
+                                if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['kategori']) && isset($_GET['start_date']) && isset($_GET['end_date'])) {
+                                    $kategori_ids = explode(',', $_GET['kategori']);
+                                    $start_date = $_GET['start_date'];
+                                    $end_date = $_GET['end_date'];
+                            ?>
+
+
+                            <div class="page-header hidden-cetak">
+                                <a href="../cetak_list.php" class="btn btn-primary"><i class="si si-arrow-left pe-2"></i>Kembali</a>
+                                <button type="button" class="btn btn-primary" onclick="printDiv();"><i class="si si-printer pe-2"></i>Cetak</button>
+                            </div>
+
+                            <div class="row cetak">
                                 <div class="col-md-12">
-                                    <div class="cetak">
-                                        <div class="card">
-                                            <?php
-                                                function getLaporan($koneksi, $kategori, $start_date, $end_date)
-                                                {
-                                                    if (empty($kategori)) {
-                                                        $query = "SELECT lk.*, l.nama_kategori 
-                                                                FROM laporan_keuangan lk
-                                                                WHERE lk.periode BETWEEN '$start_date' AND '$end_date'";
-                                                    } else {
-                                                        $kategori_ids = implode(',', $kategori);
-                                                        $query = "SELECT lk.*, l.nama_kategori 
-                                                                FROM laporan_keuangan lk
-                                                                INNER JOIN laporan_kategori lk_cat ON lk.id = lk_cat.laporan_id
-                                                                INNER JOIN kategori l ON lk_cat.kategori_id = l.id
-                                                                WHERE lk_cat.kategori_id IN ($kategori_ids)
-                                                                AND lk.periode BETWEEN '$start_date' AND '$end_date'";
-                                                    }
 
-                                                    $result = $koneksi->query($query);
-
-                                                    if ($result) {
-                                                        return $result->fetch_all(MYSQLI_ASSOC);
-                                                    } else {
-                                                        return null;
-                                                    }
-                                                }
-
-                                                if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['kategori']) && isset($_GET['start_date']) && isset($_GET['end_date'])) {
-                                                    $kategori_ids = explode(',', $_GET['kategori']);
-                                                    $start_date = $_GET['start_date'];
-                                                    $end_date = $_GET['end_date'];
-                                            ?>
-                                            <div class="card-body">
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered table-hover mb-0 text-nowrap">
-                                                    <div class="row">
-                                                        <div class="col-lg-6">
-                                                            <a class="header-brand" href="">
-                                                                <img src="../../sash/images/brand/logo-3.png" class="header-brand-img logo-3" alt="Sash logo">
-                                                            </a>
-                                                            <div>
-                                                                <address class="pt-3">
-                                                                    Pemerintah Desa Panyiwi<br>
-                                                                    Kecamatan Cendrana, Kabupaten Bone
-                                                                </address>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-6 text-end border-bottom border-lg-0 hidden-cetak">
-                                                            <address id="now"></address>
-                                                            <address class="pt-6">
-                                                                Start Date: <?php echo translateDay($startDateTime->format('l')) . ', ' . $startDateTime->format('d F Y'); ?> <br>
-                                                                End Date: <?php echo translateDay($endDateTime->format('l')) . ', ' . $endDateTime->format('d F Y'); ?>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-hover mb-0 text-nowrap">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <a class="header-brand" href="">
+                                                            <img src="../../sash/images/brand/logo-3.png" class="header-brand-img logo-3" alt="Sash logo">
+                                                        </a>
+                                                        <div>
+                                                            <address class="pt-3">
+                                                                Pemerintah Desa Panyiwi<br>
+                                                                Kecamatan Cendrana, Kabupaten Bone
                                                             </address>
                                                         </div>
                                                     </div>
-                                                        <thead>
-                                                            <tr class="bg-primary xxx">
-                                                                <th class="text-center text-white">U R A I A N</th>
-                                                                <th class="text-center text-white">Ref.</th>
-                                                                <th class="text-center text-white">ANGGARAN (Rp)</th>
-                                                                <th class="text-center text-white">REALISASI (Rp)</th>
-                                                                <th class="text-center text-white">LEBIH/(KURANG) (Rp)</th>
+                                                    <div class="col-lg-6 text-end border-bottom border-lg-0 hidden-cetak">
+                                                        <address id="now"></address>
+                                                        <address class="pt-6">
+                                                            Start Date: <?php echo translateDay($startDateTime->format('l')) . ', ' . $startDateTime->format('d F Y'); ?> <br>
+                                                            End Date: <?php echo translateDay($endDateTime->format('l')) . ', ' . $endDateTime->format('d F Y'); ?>
+                                                        </address>
+                                                    </div>
+                                                </div>
+                                                    <thead>
+                                                        <tr class="">
+                                                            <th class="text-center">U R A I A N</th>
+                                                            <th class="text-center">Ref.</th>
+                                                            <th class="text-center">ANGGARAN (Rp)</th>
+                                                            <th class="text-center">REALISASI (Rp)</th>
+                                                            <th class="text-center">LEBIH/(KURANG) (Rp)</th>
+                                                        </tr>
+                                                        
+                                                    </thead>
+                                                    <tbody>
+                                                            <?php
+                                                                $total_anggaran = 0;
+                                                                $total_realisasi = 0;
+
+                                                                foreach ($kategori_ids as $kategori_id) {
+                                                                    $laporan = getLaporan($koneksi, [$kategori_id], $start_date, $end_date);
+                                                                    $query_kategori = "SELECT nama_kategori FROM kategori WHERE id = $kategori_id";
+                                                                    $result_kategori = $koneksi->query($query_kategori);
+                                                                    $nama_kategori = $result_kategori->fetch_assoc()['nama_kategori'];
+
+                                                                    if ($laporan) {
+                                                                        foreach ($laporan as $data) {
+                                                                            $total_anggaran += $data['anggaran'];
+                                                                            $total_realisasi += $data['realisasi'];
+                                                            ?>  
+                                                            <tr>
+                                                                <td><span class="fw-semibold" >
+                                                                    <!-- Kategori:  -->
+                                                                        <?php echo htmlspecialchars($nama_kategori); ?>
+                                                                    </span><br><br>
+                                                                    <span class="ms-6">
+                                                                        <?php echo htmlspecialchars($data['uraian']); ?>
+                                                                    </span>
+                                                                </td>
+                                                                <td><?php echo htmlspecialchars($data['ref']); ?></td>
+                                                                <td class="text-center align-middle">
+                                                                    Rp <?php echo rtrim(number_format($data['anggaran'], 2, ',', '.'), '0'); ?>
+                                                                </td>
+                                                                <td class="text-center align-middle">
+                                                                    Rp <?php echo rtrim(number_format($data['realisasi'], 2, ',', '.'), '0'); ?>
+                                                                </td>
+                                                                <td class="text-center align-middle">
+                                                                    Rp <?php echo rtrim(number_format($data['realisasi'] - $data['anggaran'], 2, ',', '.'), '0'); ?>
+                                                                </td>
+
                                                             </tr>
-                                                            
-                                                        </thead>
-                                                        <tbody>
-                                                                <?php
-                                                                    $total_anggaran = 0;
-                                                                    $total_realisasi = 0;
-
-                                                                    foreach ($kategori_ids as $kategori_id) {
-                                                                        $laporan = getLaporan($koneksi, [$kategori_id], $start_date, $end_date);
-                                                                        $query_kategori = "SELECT nama_kategori FROM kategori WHERE id = $kategori_id";
-                                                                        $result_kategori = $koneksi->query($query_kategori);
-                                                                        $nama_kategori = $result_kategori->fetch_assoc()['nama_kategori'];
-
-                                                                        if ($laporan) {
-                                                                            foreach ($laporan as $data) {
-                                                                                $total_anggaran += $data['anggaran'];
-                                                                                $total_realisasi += $data['realisasi'];
-                                                                ?>  
-                                                                <tr>
-                                                                    <td><span class="fw-semibold" >
-                                                                        <!-- Kategori:  -->
-                                                                            <?php echo htmlspecialchars($nama_kategori); ?>
-                                                                        </span><br><br>
-                                                                        <span class="ms-6">
-                                                                            <?php echo htmlspecialchars($data['uraian']); ?>
-                                                                        </span>
-                                                                    </td>
-                                                                    <td><?php echo htmlspecialchars($data['ref']); ?></td>
-                                                                    <td class="text-center align-middle">
-                                                                        Rp <?php echo rtrim(number_format($data['anggaran'], 2, ',', '.'), '0'); ?>
-                                                                    </td>
-                                                                    <td class="text-center align-middle">
-                                                                        Rp <?php echo rtrim(number_format($data['realisasi'], 2, ',', '.'), '0'); ?>
-                                                                    </td>
-                                                                    <td class="text-center align-middle">
-                                                                        Rp <?php echo rtrim(number_format($data['realisasi'] - $data['anggaran'], 2, ',', '.'), '0'); ?>
-                                                                    </td>
-
-                                                                </tr>
-                                                                <?php
-                                                                            }
+                                                            <?php
                                                                         }
                                                                     }
-                                                                ?>
-                                                                <tr>
-                                                                    <td class="text-center" colspan="2"><strong>JUMLAH</strong></td>
-                                                                    <td class="text-right text-center align-middle">Rp <?php echo rtrim(number_format($total_anggaran, 2, ',', '.'), '0'); ?></td>
-                                                                    <td class="text-right text-center align-middle">Rp <?php echo rtrim(number_format($total_realisasi, 2, ',', '.'), '0'); ?></td>
-                                                                    <td class="text-right text-center align-middle">
-                                                                        <strong>Rp <?php echo rtrim(number_format($total_realisasi - $total_anggaran, 2, ',', '.'), '0'); ?></strong>
-                                                                    </td>
-                                                                </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                                }
+                                                            ?>
+                                                            <tr>
+                                                                <td class="text-center" colspan="2"><strong>JUMLAH</strong></td>
+                                                                <td class="text-right text-center align-middle">Rp <?php echo rtrim(number_format($total_anggaran, 2, ',', '.'), '0'); ?></td>
+                                                                <td class="text-right text-center align-middle">Rp <?php echo rtrim(number_format($total_realisasi, 2, ',', '.'), '0'); ?></td>
+                                                                <td class="text-right text-center align-middle">
+                                                                    <strong>Rp <?php echo rtrim(number_format($total_realisasi - $total_anggaran, 2, ',', '.'), '0'); ?></strong>
+                                                                </td>
+                                                            </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
 
-                                            </div>
-                                            <div class="card-footer d-flex justify-content-between">
-                                                <a href="../cetak_list.php" class="btn btn-primary"><i class="si si-arrow-left pe-2"></i>Kembali</a>
-                                                <button type="button" target="_blank" class="btn btn-primary" onclick="printDiv();"><i class="si si-printer pe-2"></i>Cetak</button>
-                                            </div>
-                                            <?php } else { ?>
-                                                <div class="alert alert-danger" role="alert">
-                                                    Terjadi kesalahan: Data tidak lengkap atau tidak valid.
-                                                </div>
-                                            <?php } ?>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
+
+                            <?php } else { ?>
+                                <div class="alert alert-danger" role="alert">
+                                    Terjadi kesalahan: Data tidak lengkap atau tidak valid.
+                                </div>
+                            <?php } ?>
+
                         </div>
 
                         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
