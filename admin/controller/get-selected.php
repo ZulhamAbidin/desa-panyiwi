@@ -2,7 +2,7 @@
 include '../../koneksi.php';
 
 $query = "
-    SELECT lk.id, lk.uraian, lk.ref, lk.anggaran, lk.realisasi, lk.selisih, lk.periode, k.nama_kategori 
+    SELECT lk.id, lk.uraian, lk.ref, lk.anggaran, lk.realisasi, lk.periode, k.nama_kategori 
     FROM laporan_keuangan lk
     LEFT JOIN laporan_kategori lkat ON lk.id = lkat.laporan_id
     LEFT JOIN kategori k ON lkat.kategori_id = k.id
@@ -16,6 +16,8 @@ if ($result === false) {
 
 $data = array();
 while ($row = $result->fetch_assoc()) {
+    $selisih = $row['anggaran'] - $row['realisasi'];
+    $row['selisih'] = ($selisih < 0 ? '-' : '+') . abs($selisih);
     $data[] = $row;
 }
 

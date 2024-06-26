@@ -82,76 +82,70 @@ $kategoris = $result->fetch_all(MYSQLI_ASSOC);
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
 
 <script>
-    $(document).ready(function() {
-        $('#data-table').DataTable({
-            "processing": true,
-            "serverSide": false,
-            "ajax": {
-                "url": "controller/get-selected.php",
-                "type": "GET"
-            },
-            "columns": [{
-                    "data": null,
-                    "orderable": false,
-                    render: function(data, type, row) {
-                        return '<input type="checkbox" name="selected_ids[]" value="' + row.id +
-                            '">';
-                    }
-                },
-                {
-                    "data": "uraian"
-                },
-                {
-                    "data": "ref"
-                },
-                {
-                    "data": "anggaran",
-                    render: function(data) {
-                        return 'Rp ' + numberFormat(data);
-                    }
-                },
-                {
-                    "data": "realisasi",
-                    render: function(data) {
-                        return 'Rp ' + numberFormat(data);
-                    }
-                },
-                {
-                    "data": "selisih",
-                    render: function(data) {
-                        return 'Rp ' + numberFormat(data);
-                    }
-                },
-                { 
-                    "data": "periode", 
-                    render: function(data) {
-                        var date = new Date(data);
-                        return date.getFullYear();
-                    }
-                },
-                {
-                    "data": "nama_kategori"
+   $(document).ready(function() {
+    $('#data-table').DataTable({
+        "processing": true,
+        "serverSide": false,
+        "ajax": {
+            "url": "controller/get-selected.php",
+            "type": "GET"
+        },
+        "columns": [
+            {
+                "data": null,
+                "orderable": false,
+                render: function(data, type, row) {
+                    return '<input type="checkbox" name="selected_ids[]" value="' + row.id + '">';
                 }
-            ],
-            "order": [
-                [1, 'asc']
-            ]
-        });
-
-        function numberFormat(number) {
-            return new Intl.NumberFormat('id-ID', {
-                style: 'decimal'
-            }).format(number);
-        }
-
-        $('#select-all').click(function() {
-            var checked = this.checked;
-            $('input[name="selected_ids[]"]').each(function() {
-                this.checked = checked;
-            });
-        });
-
+            },
+            { "data": "uraian" },
+            { "data": "ref" },
+            { 
+                "data": "anggaran",
+                render: function(data) {
+                    return 'Rp ' + numberFormat(data);
+                }
+            },
+            { 
+                "data": "realisasi",
+                render: function(data) {
+                    return 'Rp ' + numberFormat(data);
+                }
+            },
+            { 
+                "data": "selisih",
+                render: function(data) {
+                    var sign = data.charAt(0);
+                    var value = data.substring(1);
+                    return sign + ' Rp ' + numberFormat(value);
+                }
+            },
+            { 
+                "data": "periode",
+                render: function(data) {
+                    var date = new Date(data);
+                    return date.getFullYear();
+                }
+            },
+            { "data": "nama_kategori" }
+        ],
+        "order": [[1, 'asc']]
     });
+
+    function numberFormat(number) {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'decimal'
+        }).format(number);
+    }
+
+    $('#select-all').click(function() {
+        var checked = this.checked;
+        $('input[name="selected_ids[]"]').each(function() {
+            this.checked = checked;
+        });
+    });
+});
+
 </script>
 
 <script>

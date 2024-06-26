@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_ids'])) {
     $ids = implode(',', array_map('intval', $selected_ids));
 
     $query = "
-        SELECT lk.id, lk.uraian, lk.ref, lk.anggaran, lk.realisasi, lk.selisih, lk.periode, k.nama_kategori 
+        SELECT lk.id, lk.uraian, lk.ref, lk.anggaran, lk.realisasi, lk.periode, k.nama_kategori 
         FROM laporan_keuangan lk
         LEFT JOIN laporan_kategori lkat ON lk.id = lkat.laporan_id
         LEFT JOIN kategori k ON lkat.kategori_id = k.id
@@ -20,6 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_ids'])) {
 
     $rows = [];
     while ($row = $result->fetch_assoc()) {
+        $row['periode'] = date('Y', strtotime($row['periode']));
+        $row['selisih'] = $row['realisasi'] - $row['anggaran'];
         $rows[] = $row; 
     }
 
@@ -49,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_ids'])) {
     <style>
         @media print {
             body {
+                margin-top: 10px;
                 padding: 0;
                 height: 100%;
                 color: black !important;
@@ -281,66 +284,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selected_ids'])) {
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="table-responsive">
-                                                
                                                 <table class="table table-bordered table-hover mb-0 text-nowrap">
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <a class="header-brand" href="">
-                                                            <img src="../../sash/images/brand/logo-3.png" class="header-brand-img logo-3" alt="Sash logo">
-                                                        </a>
-                                                        <div>
-                                                            <address class="pt-3">
-                                                                Pemerintah Desa Panyiwi<br>
-                                                                Kecamatan Cendrana, Kabupaten Bone
-                                                            </address>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <a class="header-brand" href="">
+                                                                <img src="../../sash/images/brand/logo-3.png" class="header-brand-img logo-3" alt="Sash logo">
+                                                            </a>
+                                                            <div>
+                                                                <address class="pt-3">
+                                                                    Pemerintah Desa Panyiwi<br>
+                                                                    Kecamatan Cendrana, Kabupaten Bone
+                                                                </address>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6 text-end border-bottom border-lg-0 hidden-cetak">
+                                                            <address id="now"></address>
+                                                            <address class="pt-6"></address>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-6 text-end border-bottom border-lg-0 hidden-cetak">
-                                                        <address id="now"></address>
-                                                        <address class="pt-6">
-                                                            
-                                                        </address>
-                                                    </div>
-                                                </div>
                                                     <thead>
-                                                        <tr class="bg-primary xxx">
-                                                            <th class="text-center text-white">Uraian</th>
-                                                            <th class="text-center text-white">Ref</th>
-                                                            <th class="text-center text-white">Anggaran</th>
-                                                            <th class="text-center text-white">Realisasi</th>
-                                                            <th class="text-center text-white">Selisih</th>
-                                                            <th class="text-center text-white">Periode</th>
+                                                        <tr class=" xxx">
+                                                            <th class="text-center">Uraian</th>
+                                                            <th class="text-center">Ref</th>
+                                                            <th class="text-center">Periode</th>
+                                                            <th class="text-center">Anggaran</th>
+                                                            <th class="text-center">Realisasi</th>
+                                                            <th class="text-center">Selisih</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                            <?php 
-                                                            $total_anggaran = 0;
-                                                            $total_realisasi = 0;
-                                                            $total_selisih = 0;
+                                                        <?php 
+                                                        $total_anggaran = 0;
+                                                        $total_realisasi = 0;
+                                                        $total_selisih = 0;
+
+                                                        foreach ($rows as $row): 
+                                                            $total_anggaran += $row['anggaran'];
+                                                            $total_realisasi += $row['realisasi'];
+                                                            $selisih = $row['realisasi'] - $row['anggaran'];
+                                                            $total_selisih += $selisih;
+                                                            $selisih_format = ($selisih < 0 ? '+ Rp. ' : '- Rp. ') . number_format(abs($selisih), 0, ',', '.'); // Format selisih
+                                                        ?>
+                                                        <tr>
+                                                            <td class=""><span class="fw-semibold"><?= htmlspecialchars($row['nama_kategori']) ?></span><br><br>
+                                                                <span class="ms-6"><?= htmlspecialchars($row['uraian']) ?></span></td>
+                                                            <td class="text-center align-middle"><?= htmlspecialchars($row['ref']) ?></td>
+                                                            <td class="text-center align-middle"><?= htmlspecialchars($row['periode']) ?></td>
+                                                            <td class="text-center align-middle"><?= 'Rp. ' . number_format($row['anggaran'], 0, ',', '.') ?></td>
+                                                            <td class="text-center align-middle"><?= 'Rp. ' . number_format($row['realisasi'], 0, ',', '.') ?></td>
+                                                            <td class="text-center align-middle"><?= $selisih_format ?></td>
                                                             
-                                                            foreach ($rows as $row): 
-                                                                $total_anggaran += $row['anggaran'];
-                                                                $total_realisasi += $row['realisasi'];
-                                                                $total_selisih += $row['selisih'];
-                                                            ?>
-                                                            <tr>
-                                                                <td class=""><span class="fw-semibold" >
-                                                                    <!-- Kategori:  -->
-                                                                    <?= htmlspecialchars($row['nama_kategori']) ?>
-                                                                    </span><br><br>
-                                                                    <span class="ms-6"><?= htmlspecialchars($row['uraian']) ?></span></td>
-                                                                <td class="text-center align-middle"><?= htmlspecialchars($row['ref']) ?></td>
-                                                                <td class="text-center align-middle"><?= 'Rp. ' . number_format($row['anggaran'], 0, ',', '.') ?></td>
-                                                                <td class="text-center align-middle"><?= 'Rp. ' . number_format($row['realisasi'], 0, ',', '.') ?></td>
-                                                                <td class="text-center align-middle"><?= 'Rp. ' . number_format($row['selisih'], 0, ',', '.') ?></td>
-                                                                <td class="text-center align-middle"><?= htmlspecialchars($row['periode']) ?></td>
-                                                            </tr>
+                                                        </tr>
                                                         <?php endforeach; ?>
                                                         <tr>
                                                             <td class="text-center" colspan="3"><strong>JUMLAH</strong></td>
                                                             <td class="text-center align-middle"><?= 'Rp. ' . number_format($total_anggaran, 0, ',', '.') ?></td>
                                                             <td class="text-center align-middle"><?= 'Rp. ' . number_format($total_realisasi, 0, ',', '.') ?></td>
-                                                            <td class="text-center align-middle"><?= 'Rp. ' . number_format($total_selisih, 0, ',', '.') ?></td>
+                                                            <td class="text-center align-middle"><?= ($total_selisih < 0 ? '+ Rp. ' : '- Rp. ') . number_format(abs($total_selisih), 0, ',', '.') ?></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
