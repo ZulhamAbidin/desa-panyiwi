@@ -12,7 +12,6 @@ if ($result->num_rows > 0) {
     exit();
 }
 
-// Mendapatkan kategori_id dari laporan_kategori
 $queryKategoriLaporan = "SELECT kategori_id FROM laporan_kategori WHERE laporan_id = $id";
 $resultKategoriLaporan = $koneksi->query($queryKategoriLaporan);
 
@@ -151,7 +150,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         value="<?php echo $laporan['periode']; ?>" required>
                 </div>
 
-                <div class="col-12 col-md-12 mb-4">
+                <div class="col-12 col-md-6 mb-4">
+                    <label for="ref">Ref:</label>
+                    <input type="text" class="form-control" id="ref" name="ref"
+                        value="<?php echo $laporan['ref']; ?>" required>
+                </div>
+
+                <div class="col-12 col-md-6 mb-4">
                     <label for="kategori">Kategori:</label>
                     <select class="form-control" id="kategori" name="kategori_id" required>
                         <?php foreach ($kategoriList as $kategori) : ?>
@@ -247,4 +252,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </script>
 
 <?php include 'src/footer.php'; ?>
-```

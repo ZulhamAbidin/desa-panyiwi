@@ -1,5 +1,5 @@
 <?php
-include '../koneksi.php';
+include '../../koneksi.php';
 
 $query = "SELECT id, nama_kategori
           FROM kategori";

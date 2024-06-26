@@ -1,5 +1,3 @@
-
-
 <?php include 'src/header.php'; ?>
 
 <div class="container">

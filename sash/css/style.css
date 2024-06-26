@@ -694,7 +694,7 @@ pre code {
     max-width: none !important;
 }
 
-@media print {
+/* @media print {
     * {
         text-shadow: none !important;
         box-shadow: none !important;
@@ -781,7 +781,7 @@ pre code {
     .text-wrap table td {
         border: 1px solid #e9edf4 !important;
     }
-}
+} */
 
 html {
     font-size: 16px;
@@ -815,11 +815,11 @@ body *:hover::-webkit-scrollbar-thumb {
     background: #f6f6fb;
 }
 
-@media print {
+/* @media print {
     body {
         background: none;
     }
-}
+} */
 
 a {
     -webkit-text-decoration-skip-ink: auto;
@@ -899,11 +899,11 @@ pre {
     font-weight: 600;
 }
 
-@media print {
+/* @media print {
     .container {
         max-width: none;
     }
-}
+} */
 
 .row-cards>.col,
 .row-cards>[class*=col-] {
@@ -5131,12 +5131,12 @@ input[type=button].btn-block {
     border: 1px solid #e9edf4;
 }
 
-@media print {
+/* @media print {
     .card {
         box-shadow: none;
         border: none;
     }
-}
+} */
 
 .card-body+.card-body {
     border-top: 1px solid #e9edf4;
@@ -5146,11 +5146,11 @@ input[type=button].btn-block {
     margin-bottom: 0;
 }
 
-@media print {
+/* @media print {
     .card-body {
         padding: 0;
     }
-}
+} */
 
 .card-body-scrollable {
     overflow: auto;
@@ -5162,11 +5162,11 @@ input[type=button].btn-block {
     background: none;
 }
 
-@media print {
+/* @media print {
     .card-header {
         display: none;
     }
-}
+} */
 
 .card-title {
     font-size: 1rem;
@@ -23246,11 +23246,11 @@ ul.timeline>li:before {
     color: var(--primary-bg-color);
 }
 
-@media print {
+/* @media print {
     .footer {
         display: none;
     }
-}
+} */
 
 .footer-1.footer {
     padding: 1.25rem 1.25rem 1.25rem 1.25rem;
@@ -23383,11 +23383,11 @@ ul.timeline>li:before {
     border-bottom: 1px solid #e9edf4;
 }
 
-@media print {
+/* @media print {
     .header {
         display: none;
     }
-}
+} */
 
 .header .dropdown-menu {
     margin-top: 0;
@@ -52257,12 +52257,12 @@ svg.nvd3-svg {
 /**********
   *  Print
   */
-@media print {
+/* @media print {
     .nvd3 text {
         stroke-width: 0;
         fill-opacity: 1;
     }
-}
+} */
 
 /* scatter */
 .nv-noninteractive,
@@ -62018,13 +62018,13 @@ ul {
     }
 }
 
-@media print {
+/* @media print {
     .app-content {
         margin: 0;
         padding: 0;
         background-color: #fff;
     }
-}
+} */
 
 .app-header {
     position: fixed;
@@ -62049,11 +62049,11 @@ ul {
     }
 }
 
-@media print {
+/* @media print {
     .app-header {
         display: none;
     }
-}
+} */
 
 .app-header__logo {
     -webkit-box-flex: 1;
@@ -62150,11 +62150,11 @@ ul {
     background: rgba(0, 0, 0, 0.2);
 }
 
-@media print {
+/* @media print {
     .app-sidebar {
         display: none;
     }
-}
+} */
 
 @media (max-width: 991px) {
     .app-sidebar__overlay {
@@ -62630,11 +62630,11 @@ ul {
     font-style: italic;
 }
 
-@media print {
+/* @media print {
     .app-title {
         display: none;
     }
-}
+} */
 
 @media (max-width: 480px) {
     .app-title {
@@ -63107,13 +63107,13 @@ ul {
     }
 }
 
-@media print {
+/* @media print {
     .icontext-menu .app-content {
         margin: 0;
         padding: 0;
         background-color: #fff;
     }
-}
+} */
 
 .icontext-menu .app-header {
     position: fixed;
@@ -63138,11 +63138,11 @@ ul {
     }
 }
 
-@media print {
+/* @media print {
     .icontext-menu .app-header {
         display: none;
     }
-}
+} */
 
 .icontext-menu .app-header__logo {
     -webkit-box-flex: 1;
@@ -63240,11 +63240,11 @@ ul {
     background: rgba(0, 0, 0, 0.2);
 }
 
-@media print {
+/* @media print {
     .icontext-menu .app-sidebar {
         display: none;
     }
-}
+} */
 
 @media (max-width: 767px) {
     .icontext-menu .app-sidebar__overlay {
@@ -63742,11 +63742,11 @@ ul {
     font-style: italic;
 }
 
-@media print {
+/* @media print {
     .icontext-menu .app-title {
         display: none;
     }
-}
+} */
 
 @media (max-width: 480px) {
     .icontext-menu .app-title {
@@ -64181,13 +64181,13 @@ ul {
     }
 }
 
-@media print {
+/* @media print {
     .closed-leftmenu .app-content {
         margin: 0;
         padding: 0;
         background-color: #fff;
     }
-}
+} */
 
 .closed-leftmenu .app-header {
     position: fixed;
@@ -64212,11 +64212,11 @@ ul {
     }
 }
 
-@media print {
+/* @media print {
     .closed-leftmenu .app-header {
         display: none;
     }
-}
+} */
 
 .closed-leftmenu .app-header__logo {
     -webkit-box-flex: 1;
@@ -64314,11 +64314,11 @@ ul {
     background: rgba(0, 0, 0, 0.2);
 }
 
-@media print {
+/* @media print {
     .closed-leftmenu .app-sidebar {
         display: none;
     }
-}
+} */
 
 @media (max-width: 991px) {
     .closed-leftmenu .app-sidebar__overlay {
@@ -64806,11 +64806,11 @@ ul {
     font-style: italic;
 }
 
-@media print {
+/* @media print {
     .closed-leftmenu .app-title {
         display: none;
     }
-}
+} */
 
 @media (max-width: 480px) {
     .closed-leftmenu .app-title {
@@ -65626,11 +65626,11 @@ ul {
     font-style: italic;
 }
 
-@media print {
+/* @media print {
     .hover-submenu .app-title {
         display: none;
     }
-}
+} */
 
 @media (max-width: 480px) {
     .hover-submenu .app-title {
@@ -66221,13 +66221,13 @@ ul {
     }
 }
 
-@media print {
+/* @media print {
     .hover-submenu1 .app-content {
         margin: 0;
         padding: 0;
         background-color: #fff;
     }
-}
+} */
 
 .hover-submenu1 .app-header {
     position: fixed;
@@ -66252,11 +66252,11 @@ ul {
     }
 }
 
-@media print {
+/* @media print {
     .hover-submenu1 .app-header {
         display: none;
     }
-}
+} */
 
 .hover-submenu1 .app-header__logo {
     -webkit-box-flex: 1;
@@ -66362,11 +66362,11 @@ ul {
     background: rgba(0, 0, 0, 0.2);
 }
 
-@media print {
+/* @media print {
     .hover-submenu1 .app-sidebar {
         display: none;
     }
-}
+} */
 
 @media (max-width: 991px) {
     .hover-submenu1 .app-sidebar__overlay {
@@ -66839,11 +66839,11 @@ ul {
     font-style: italic;
 }
 
-@media print {
+/* @media print {
     .hover-submenu1 .app-title {
         display: none;
     }
-}
+} */
 
 @media (max-width: 480px) {
     .hover-submenu1 .app-title {
@@ -72443,7 +72443,7 @@ button.bg-lime:focus {
     }
 }
 
-@media print {
+/* @media print {
     .d-print-none {
         display: none !important;
     }
@@ -72481,7 +72481,7 @@ button.bg-lime:focus {
         display: -ms-inline-flexbox !important;
         display: inline-flex !important;
     }
-}
+} */
 
 .display-1 i,
 .display-2 i,

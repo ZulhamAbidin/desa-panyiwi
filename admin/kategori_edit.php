@@ -1,11 +1,9 @@
 <?php
 include 'src/header.php';
-include 'koneksi.php';
+include '../koneksi.php';
 
-// Ambil id_kategori dari parameter GET
 $id_kategori = $_GET['id'];
 
-// Query untuk mengambil data kategori berdasarkan id_kategori
 $sql = "SELECT nama_kategori FROM kategori WHERE id = ?";
 $stmt = $koneksi->prepare($sql);
 $stmt->bind_param("i", $id_kategori);
@@ -23,7 +21,6 @@ if ($stmt->num_rows > 0) {
 
 $stmt->close();
 
-// Proses update jika form disubmit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nama_kategori_baru = $_POST['nama_kategori'];
 

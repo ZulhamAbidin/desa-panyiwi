@@ -94,14 +94,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="row">
                 <div class="col-12 col-md-12 mb-4">
                     <label for="uraian">Uraian:</label>
-                    <!-- <input type="text" class="form-control" id="uraian" name="uraian" placeholder="Contoh : Bagi Hasil Pajak dan Retribusi" required> -->
                     <textarea class="form-control" rows="4" name="uraian" id="uraian" required></textarea>
                 </div>
 
-                <!-- <div class="col-12 col-md-6">
+                <div class="col-12 col-md-6">
                     <label for="ref">Ref:</label>
                     <input type="text" class="form-control" id="ref" name="ref">
-                </div> -->
+                </div>
 
                 <div class="col-12 col-md-6 mb-4">
                     <label for="anggaran">Anggaran:</label>
@@ -133,7 +132,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </option>
                         <?php endforeach; ?>
                     </select>
-                    <!-- <a href="tambahh_kategori.php" class="">Tambah Kategori</a> -->
                 </div>
 
                 <div class="col-12 col-md-6 mb-4">

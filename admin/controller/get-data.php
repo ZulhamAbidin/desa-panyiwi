@@ -1,5 +1,5 @@
 <?php
-include '../koneksi.php';
+include '../../koneksi.php';
 
 $query = "SELECT lk.id, lk.uraian, lk.ref, lk.anggaran, lk.realisasi, lk.periode, lk.gambar, k.nama_kategori
           FROM laporan_keuangan lk
@@ -17,9 +17,9 @@ if ($result && $result->num_rows > 0) {
         $formattedRealisasi = 'Rp. ' . number_format($row['realisasi'], 0, ',', '.');
         $formattedSelisih = 'Rp. ' . number_format(abs($selisih), 0, ',', '.');
         if ($selisih < 0) {
-            $formattedSelisih = '- ' . $formattedSelisih;
-        } else {
             $formattedSelisih = '+ ' . $formattedSelisih;
+        } else {
+            $formattedSelisih = '- ' . $formattedSelisih;
         }
 
         $actionColumn = '<a href="edit.php?id=' . $row['id'] . '" class="btn btn-sm btn-primary" role="button">
@@ -39,7 +39,7 @@ if ($result && $result->num_rows > 0) {
             'Periode' => $row['periode'],
             'Kategori' => $row['nama_kategori'],
             'Gambar' => $row['gambar'],
-            'Action' => $actionColumn // Kolom action dengan tombol "Edit" dan "Delete"
+            'Action' => $actionColumn
         ];
         $no++;
     }

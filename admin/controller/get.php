@@ -1,5 +1,5 @@
 <?php
-include '../koneksi.php';
+include '../../koneksi.php';
 
 $searchTerm = isset($_POST['q']) ? $_POST['q'] : '';
 

@@ -1,5 +1,4 @@
 <?php include 'src/header.php'; ?>
-
 <?php
 if (isset($_SESSION['success_message'])) {
     echo '

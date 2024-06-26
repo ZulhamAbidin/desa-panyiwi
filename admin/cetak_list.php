@@ -17,7 +17,6 @@ $kategoris = $result->fetch_all(MYSQLI_ASSOC);
 </div>
 
 <div class="card">
-    <!-- Cetak Berdasarkan Kategori -->
     <div class="card-body">
         <div class="mb-5 text-center fw-bold"> Cetak Berdasarkan Kategori</div>
         <form action="controller/proses_cetak_laporan.php" method="post" id="cetak-laporan-form">
@@ -54,7 +53,6 @@ $kategoris = $result->fetch_all(MYSQLI_ASSOC);
 </div>
 
 <div class="card">
-    <!-- Cetak Custom Selected -->
     <div class="card-body mt-4">
         <div class="mb-5 text-center fw-bold"> Cetak Berdasarkan Yang Dipilih</div>
         <form action="controller/proses-cetak-selected.php" method="post" id="cetak-laporan-form">

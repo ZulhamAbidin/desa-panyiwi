@@ -1,5 +1,5 @@
 <?php
-include 'koneksi.php';
+include '../koneksi.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $kategori_id = $_POST['kategori'];
