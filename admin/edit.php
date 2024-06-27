@@ -37,7 +37,7 @@ function formatRupiahToNumber($rupiah)
     return (int) preg_replace('/[^0-9]/', '', $rupiah);
 }
 
-function updateLaporanKeuangan($id, $uraian, $ref, $anggaran, $realisasi, $selisih, $periode, $kategori_id, $gambar)
+function updateLaporanKeuangan($id, $uraian, $ref, $anggaran, $realisasi, $selisih, $periode, $deskripsi_gambar, $kategori_id, $gambar)
 {
     global $koneksi;
 
@@ -47,6 +47,7 @@ function updateLaporanKeuangan($id, $uraian, $ref, $anggaran, $realisasi, $selis
     $realisasi = formatRupiahToNumber($realisasi);
     $selisih = formatRupiahToNumber($selisih);
     $periode = mysqli_real_escape_string($koneksi, $periode);
+    $deskripsi_gambar = mysqli_real_escape_string($koneksi, $deskripsi_gambar);
     $kategori_id = (int) $kategori_id;
     $gambarPath = null;
 
@@ -69,7 +70,8 @@ function updateLaporanKeuangan($id, $uraian, $ref, $anggaran, $realisasi, $selis
             anggaran = $anggaran, 
             realisasi = $realisasi, 
             selisih = $selisih, 
-            periode = '$periode', 
+            periode = '$periode',
+            deskripsi_gambar = '$deskripsi_gambar', 
             gambar = '$gambarPath' 
             WHERE id = $id";
 
@@ -96,9 +98,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $realisasi = $_POST['realisasi'];
     $selisih = $_POST['selisih'];
     $periode = $_POST['periode'];
+    $deskripsi_gambar = $_POST['deskripsi_gambar'];
     $kategori_id = $_POST['kategori_id'];
     $gambar = $_FILES['gambar'];
-    $sukses = updateLaporanKeuangan($id, $uraian, $ref, $anggaran, $realisasi, $selisih, $periode, $kategori_id, $gambar);
+    $sukses = updateLaporanKeuangan($id, $uraian, $ref, $anggaran, $realisasi, $selisih, $periode, $deskripsi_gambar, $kategori_id, $gambar);
 
     if ($sukses) {
         $_SESSION['success_message'] = "Laporan keuangan berhasil diperbarui";
@@ -179,6 +182,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <img id="preview" src="#" alt="Gambar Baru" width="100" style="display: none;">
                 </div>
 
+                <div class="col-12 col-md-12 mb-4">
+                    <label for="deskripsi_gambar">Deskripsi Gambar:</label>
+                    <textarea type="text" rows="4" class="form-control" id="deskripsi_gambar" name="deskripsi_gambar"
+                        value="" required> <?php echo $laporan['deskripsi_gambar']; ?> </textarea>
+                </div>
+
+                
                 <div class="col-12 col-md-12 text-end mb-4">
                     <button type="submit" class="btn btn-primary">Perbarui</button>
                 </div>

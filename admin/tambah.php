@@ -16,7 +16,7 @@ function formatRupiahToNumber($rupiah)
     return (int) preg_replace('/[^0-9]/', '', $rupiah);
 }
 
-function simpanLaporanKeuangan($uraian, $ref, $anggaran, $realisasi, $selisih, $periode, $kategori_id, $gambar)
+function simpanLaporanKeuangan($uraian, $ref, $anggaran, $realisasi, $selisih, $periode, $deskripsi_gambar, $kategori_id, $gambar)
 {
     global $koneksi;
 
@@ -25,6 +25,7 @@ function simpanLaporanKeuangan($uraian, $ref, $anggaran, $realisasi, $selisih, $
     $anggaran = formatRupiahToNumber($anggaran);
     $realisasi = formatRupiahToNumber($realisasi);
     $selisih = formatRupiahToNumber($selisih);
+    $deskripsi_gambar = mysqli_real_escape_string($koneksi, $deskripsi_gambar);
     $periode = mysqli_real_escape_string($koneksi, $periode);
     $kategori_id = (int) $kategori_id;
     $gambarPath = null;
@@ -41,8 +42,8 @@ function simpanLaporanKeuangan($uraian, $ref, $anggaran, $realisasi, $selisih, $
         }
     }
 
-    $sql = "INSERT INTO laporan_keuangan (uraian, ref, anggaran, realisasi, selisih, periode, gambar) 
-            VALUES ('$uraian', '$ref', $anggaran, $realisasi, $selisih, '$periode', '$gambarPath')";
+    $sql = "INSERT INTO laporan_keuangan (uraian, ref, anggaran, realisasi, selisih, periode, deskripsi_gambar, gambar) 
+            VALUES ('$uraian', '$ref', $anggaran, $realisasi, $selisih, '$periode', '$deskripsi_gambar', '$gambarPath')";
 
     if ($koneksi->query($sql) === true) {
         $laporan_id = $koneksi->insert_id;
@@ -68,9 +69,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $realisasi = $_POST['realisasi'];
     $selisih = $_POST['selisih'];
     $periode = $_POST['periode'];
+    $deskripsi_gambar = $_POST['deskripsi_gambar'];
     $kategori_id = $_POST['kategori_id'];
     $gambar = $_FILES['gambar'];
-    $sukses = simpanLaporanKeuangan($uraian, $ref, $anggaran, $realisasi, $selisih, $periode, $kategori_id, $gambar);
+    $sukses = simpanLaporanKeuangan($uraian, $ref, $anggaran, $realisasi, $selisih, $periode, $deskripsi_gambar, $kategori_id, $gambar);
 
     if ($sukses) {
         $_SESSION['success_message'] = "Laporan keuangan berhasil disimpan";
@@ -88,9 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div class="card">
     <div class="card-body">
-
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"
-            enctype="multipart/form-data">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-12 col-md-12 mb-4">
                     <label for="uraian">Uraian:</label>
@@ -134,9 +134,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </select>
                 </div>
 
-                <div class="col-12 col-md-6 mb-4">
+                <div class="col-12 col-md-12 mb-4">
                     <label for="gambar">Gambar:</label>
                     <input type="file" class="form-control" id="gambar" name="gambar" accept="image/*" required>
+                </div>
+
+                <div class="col-12 col-md-12 mb-4">
+                    <label for="deskripsi_gambar">Deskripsi Gambar:</label>
+                    <textarea type="text" rows="4" class="form-control" id="deskripsi_gambar" name="deskripsi_gambar" value="" required> </textarea>
                 </div>
 
                 <div class="col-12 col-md-12 text-end mb-4">

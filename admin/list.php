@@ -69,6 +69,10 @@ if (isset($_SESSION['error_message'])) {
                 <div class="modal-body text-center">
                     <img src="" id="modalImage" class="img-fluid">
                 </div>
+                <div class="modal-body text-center">
+                    <img src="" id="modalImage" class="img-fluid mb-3">
+                    <p id="modalDescription"></p>
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
                 </div>
@@ -80,7 +84,9 @@ if (isset($_SESSION['error_message'])) {
     $(document).ready(function () {
         $('#dataKeuangan').on('click', '.view-image', function () {
             var imageSrc = $(this).data('image');
+            var description = $(this).data('description');
             $('#modalImage').attr('src', 'gambar/' + imageSrc);
+            $('#imageModal .modal-body p').text(description);
         });
     });
 </script>
@@ -133,7 +139,7 @@ if (isset($_SESSION['error_message'])) {
                     "data": "Gambar",
                     "render": function (data, type, row) {
                         return '<button type="button" class="btn btn-link view-image" data-bs-toggle="modal" data-bs-target="#imageModal" data-image="' +
-                            data + '"><i class="bi bi-eye"></i></button> ';
+                            data + '" data-description="' + row['Deskripsi Gambar'] + '"><i class="bi bi-eye"></i></button>';
                     }
                 }
             ]

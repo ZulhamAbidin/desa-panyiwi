@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 26, 2024 at 08:48 PM
+-- Generation Time: Jun 27, 2024 at 12:09 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.16
 
@@ -32,6 +32,9 @@ CREATE TABLE `kategori` (
   `nama_kategori` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+  -- webhosting
+  -- ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Dumping data for table `kategori`
 --
@@ -59,8 +62,6 @@ CREATE TABLE `laporan_kategori` (
 
 INSERT INTO `laporan_kategori` (`laporan_id`, `kategori_id`) VALUES
 (1, 1),
-(2, 1),
-(3, 1),
 (1001, 1),
 (1004, 2),
 (1005, 2),
@@ -70,7 +71,6 @@ INSERT INTO `laporan_kategori` (`laporan_id`, `kategori_id`) VALUES
 (1009, 3),
 (1010, 4),
 (1011, 4),
-(1012, 4),
 (1013, 1),
 (1014, 1),
 (1015, 1),
@@ -102,7 +102,9 @@ INSERT INTO `laporan_kategori` (`laporan_id`, `kategori_id`) VALUES
 (1215, 1),
 (1216, 1),
 (1217, 1),
-(1218, 2);
+(1218, 2),
+(1220, 1),
+(1221, 1);
 
 -- --------------------------------------------------------
 
@@ -118,59 +120,59 @@ CREATE TABLE `laporan_keuangan` (
   `realisasi` decimal(15,0) DEFAULT NULL,
   `selisih` decimal(15,0) DEFAULT NULL,
   `periode` date DEFAULT NULL,
-  `gambar` varchar(255) DEFAULT NULL
+  `gambar` varchar(255) DEFAULT NULL,
+  `deskripsi_gambar` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `laporan_keuangan`
 --
 
-INSERT INTO `laporan_keuangan` (`id`, `uraian`, `ref`, `anggaran`, `realisasi`, `selisih`, `periode`, `gambar`) VALUES
-(1, 'Pendapatan Januari', 'asdasdas', '100000000', '110000000', '10000000', '2021-01-01', ''),
-(2, 'Pendapatan Februari', 'REF002', '12000000', '11000000', '1000000', '2023-02-01', 'gambar_667ae155499ec.jpg'),
-(3, 'Pendapatan Maret', 'REF003', '11000000', '10000000', '1000000', '2023-03-01', 'gambar_667ae155499ec.jpg'),
-(1001, 'Pendapatan Awal Tahun 2022', 'REF1001', '11000000', '10000000', '1000000', '2022-01-01', 'gambar_667ae155499ec.jpg'),
-(1004, 'Belanja Pengadaan Kantor 2022', 'REF1004', '8500000', '8000000', '500000', '2022-01-01', 'gambar_667ae155499ec.jpg'),
-(1005, 'Belanja Peralatan Baru 2022', 'REF1005', '9500000', '9000000', '500000', '2022-02-01', 'gambar_667ae155499ec.jpg'),
-(1006, 'Belanja Maintenance 2022', 'REF1006', '10000000', '9500000', '500000', '2022-03-01', 'gambar_667ae155499ec.jpg'),
-(1007, 'Pembiayaan Pembaruan Sistem 2022', 'REF1007', '5500000', '5300000', '200000', '2022-01-01', 'gambar_667ae155499ec.jpg'),
-(1008, 'Pembiayaan Investasi 2022', 'REF1008', '6000000', '5500000', '500000', '2022-02-01', 'gambar_667ae155499ec.jpg'),
-(1009, 'Pembiayaan Proyek Strategis 2022', '', '6500000', '6000000', '500000', '2022-03-01', 'gambar_667c5d1315bc2.jpg'),
-(1010, 'Penggajian Karyawan 2022', 'REF1010', '7500000', '7300000', '200000', '2022-01-01', 'gambar_667ae155499ec.jpg'),
-(1011, 'Penggajian Karyawan 2022', 'REF1011', '7700000', '7500000', '200000', '2022-02-01', 'gambar_667ae155499ec.jpg'),
-(1012, 'Penggajian Karyawan 2022', 'REF1012', '8000000', '7800000', '200000', '2022-03-01', 'gambar_667ae155499ec.jpg'),
-(1013, 'Pendapatan Tahun Baru 2022', 'REF1013', '13500000', '12500000', '1000000', '2022-04-01', 'gambar_667ae155499ec.jpg'),
-(1014, 'Pendapatan Bonus Karyawan 2022', 'REF1014', '12500000', '11500000', '1000000', '2022-05-01', 'gambar_667ae155499ec.jpg'),
-(1015, 'Pendapatan Akhir Tahun 2022', 'REF1015', '14000000', '13000000', '1000000', '2022-06-01', 'gambar_667ae155499ec.jpg'),
-(1101, 'Pendapatan Awal Tahun 2023', 'REF1101', '12000000', '11000000', '1000000', '2023-01-01', 'gambar_667ae155499ec.jpg'),
-(1102, 'Pendapatan Tahun Baru 2023', 'REF1102', '14000000', '13000000', '1000000', '2023-02-01', 'gambar_667ae155499ec.jpg'),
-(1103, 'Pendapatan Bonus Karyawan 2023', 'REF1103', '13000000', '12000000', '1000000', '2023-03-01', 'gambar_667ae155499ec.jpg'),
-(1104, 'Belanja Pengadaan Kantor 2023', 'REF1104', '9000000', '8500000', '500000', '2023-01-01', 'gambar_667ae155499ec.jpg'),
-(1105, 'Belanja Peralatan Baru 2023', 'REF1105', '10000000', '9500000', '500000', '2023-02-01', 'gambar_667ae155499ec.jpg'),
-(1106, 'Belanja Maintenance 2023', 'REF1106', '10500000', '10000000', '500000', '2023-03-01', 'gambar_667ae155499ec.jpg'),
-(1107, 'Pembiayaan Pembaruan Sistem 2023', 'REF1107', '6000000', '5800000', '200000', '2023-01-01', 'gambar_667ae155499ec.jpg'),
-(1108, 'Pembiayaan Investasi 2023', 'REF1108', '6500000', '6000000', '500000', '2023-02-01', 'gambar_667ae155499ec.jpg'),
-(1109, 'Pembiayaan Proyek Strategis 2023', 'REF1109', '7000000', '6500000', '500000', '2023-03-01', 'gambar_667ae155499ec.jpg'),
-(1110, 'Penggajian Karyawan 2023', 'REF1110', '8000000', '7800000', '200000', '2023-01-01', 'gambar_667ae155499ec.jpg'),
-(1111, 'Penggajian Karyawan 2023', 'REF1111', '8200000', '8000000', '200000', '2023-02-01', 'gambar_667ae155499ec.jpg'),
-(1112, 'Penggajian Karyawan 2023', 'REF1112', '8500000', '8300000', '200000', '2023-03-01', 'gambar_667ae155499ec.jpg'),
-(1113, 'Pendapatan Tahun Baru 2023', 'REF1113', '14500000', '13500000', '1000000', '2023-04-01', 'gambar_667ae155499ec.jpg'),
-(1114, 'Pendapatan Bonus Karyawan 2023', 'REF1114', '13500000', '12500000', '1000000', '2023-05-01', 'gambar_667ae155499ec.jpg'),
-(1115, 'Pendapatan Akhir Tahun 2023', 'REF1115', '15000000', '14000000', '1000000', '2023-06-01', 'gambar_667ae155499ec.jpg'),
-(1201, 'Pendapatan Awal Tahun 2024', 'REF1201', '13000000', '12000000', '1000000', '2024-01-01', 'gambar_667ae155499ec.jpg'),
-(1202, 'Pendapatan Tahun Baru 2024', 'REF1202', '15000000', '14000000', '1000000', '2024-02-01', 'gambar_667ae155499ec.jpg'),
-(1203, 'Pendapatan Bonus Karyawan 2024', 'REF1203', '14000000', '13000000', '1000000', '2024-03-01', 'gambar_667ae155499ec.jpg'),
-(1204, 'Belanja Pengadaan Kantor 2024', 'REF1204', '9500000', '9000000', '500000', '2024-01-01', 'gambar_667ae155499ec.jpg'),
-(1206, 'Belanja Maintenance 2024', 'REF1206', '11000000', '10500000', '500000', '2024-03-01', 'gambar_667ae155499ec.jpg'),
-(1207, 'Pembiayaan Pembaruan Sistem 2024', 'REF1207', '6500000', '6300000', '200000', '2024-01-01', 'gambar_667ae155499ec.jpg'),
-(1210, 'Penggajian Karyawan 2024', 'REF1210', '8500000', '8300000', '200000', '2024-01-01', 'gambar_667ae155499ec.jpg'),
-(1211, 'Penggajian Karyawan 2024', 'REF1211', '8700000', '8500000', '200000', '2024-02-01', 'gambar_667ae155499ec.jpg'),
-(1212, 'Penggajian Karyawan 2024', 'REF1212', '9000000', '8800000', '200000', '2024-03-01', 'gambar_667ae155499ec.jpg'),
-(1214, 'Pendapatan Bonus Karyawan 2024', 'REF1214', '14500000', '13500000', '1000000', '2024-05-01', 'gambar_667ae155499ec.jpg'),
-(1215, 'Pendapatan Akhir Tahun 2024', 'REF1215', '16000000', '15000000', '1000000', '2024-06-01', 'gambar_667ae155499ec.jpg'),
-(1216, 'a', 'tef', '100000', '1000000', '900000', '2000-06-27', 'gambar_667c5f792ad53.jpg'),
-(1217, 'cek cek ', '', '1000000', '2000000', '1000000', '1999-12-12', 'gambar_667c5f067c23a.jpg'),
-(1218, 'Pembelian Takjil', 'Takjil', '100000', '100000', '0', '2024-06-27', 'gambar_667c600760861.png');
+INSERT INTO `laporan_keuangan` (`id`, `uraian`, `ref`, `anggaran`, `realisasi`, `selisih`, `periode`, `gambar`, `deskripsi_gambar`) VALUES
+(1, 'Pendapatan Januariaaaaaaa', 'asdasdas', '100000000', '110000000', '10000000', '2021-01-01', 'gambar_667d56733942e.png', ' sadasda '),
+(1001, 'Pendapatan Awal Tahun 2022', 'REF1001', '11000000', '10000000', '1000000', '2022-01-01', 'gambar_667ae155499ec.jpg', NULL),
+(1004, 'Belanja Pengadaan Kantor 2022', 'REF1004', '8500000', '8000000', '500000', '2022-01-01', 'gambar_667ae155499ec.jpg', NULL),
+(1005, 'Belanja Peralatan Baru 2022', 'REF1005', '9500000', '9000000', '500000', '2022-02-01', 'gambar_667ae155499ec.jpg', NULL),
+(1006, 'Belanja Maintenance 2022', 'REF1006', '10000000', '9500000', '500000', '2022-03-01', 'gambar_667ae155499ec.jpg', NULL),
+(1007, 'Pembiayaan Pembaruan Sistem 2022', 'REF1007', '5500000', '5300000', '200000', '2022-01-01', 'gambar_667ae155499ec.jpg', NULL),
+(1008, 'Pembiayaan Investasi 2022', 'REF1008', '6000000', '5500000', '500000', '2022-02-01', 'gambar_667ae155499ec.jpg', NULL),
+(1009, 'Pembiayaan Proyek Strategis 2022', '', '6500000', '6000000', '500000', '2022-03-01', 'gambar_667c5d1315bc2.jpg', NULL),
+(1010, 'Penggajian Karyawan 2022', 'REF1010', '7500000', '7300000', '200000', '2022-01-01', 'gambar_667ae155499ec.jpg', NULL),
+(1011, 'Penggajian Karyawan 2022', 'REF1011', '7700000', '7500000', '200000', '2022-02-01', 'gambar_667ae155499ec.jpg', NULL),
+(1013, 'Pendapatan Tahun Baru 2022', 'REF1013', '13500000', '12500000', '1000000', '2022-04-01', 'gambar_667ae155499ec.jpg', NULL),
+(1014, 'Pendapatan Bonus Karyawan 2022', 'REF1014', '12500000', '11500000', '1000000', '2022-05-01', 'gambar_667ae155499ec.jpg', NULL),
+(1015, 'Pendapatan Akhir Tahun 2022', 'REF1015', '14000000', '13000000', '1000000', '2022-06-01', 'gambar_667ae155499ec.jpg', NULL),
+(1101, 'Pendapatan Awal Tahun 2023', 'REF1101', '12000000', '11000000', '1000000', '2023-01-01', 'gambar_667ae155499ec.jpg', NULL),
+(1102, 'Pendapatan Tahun Baru 2023', 'REF1102', '14000000', '13000000', '1000000', '2023-02-01', 'gambar_667ae155499ec.jpg', NULL),
+(1103, 'Pendapatan Bonus Karyawan 2023', 'REF1103', '13000000', '12000000', '1000000', '2023-03-01', 'gambar_667ae155499ec.jpg', NULL),
+(1104, 'Belanja Pengadaan Kantor 2023', 'REF1104', '9000000', '8500000', '500000', '2023-01-01', 'gambar_667ae155499ec.jpg', NULL),
+(1105, 'Belanja Peralatan Baru 2023', 'REF1105', '10000000', '9500000', '500000', '2023-02-01', 'gambar_667ae155499ec.jpg', NULL),
+(1106, 'Belanja Maintenance 2023', 'REF1106', '10500000', '10000000', '500000', '2023-03-01', 'gambar_667ae155499ec.jpg', NULL),
+(1107, 'Pembiayaan Pembaruan Sistem 2023', 'REF1107', '6000000', '5800000', '200000', '2023-01-01', 'gambar_667ae155499ec.jpg', NULL),
+(1108, 'Pembiayaan Investasi 2023', 'REF1108', '6500000', '6000000', '500000', '2023-02-01', 'gambar_667ae155499ec.jpg', NULL),
+(1109, 'Pembiayaan Proyek Strategis 2023', 'REF1109', '7000000', '6500000', '500000', '2023-03-01', 'gambar_667ae155499ec.jpg', NULL),
+(1110, 'Penggajian Karyawan 2023', 'REF1110', '8000000', '7800000', '200000', '2023-01-01', 'gambar_667ae155499ec.jpg', NULL),
+(1111, 'Penggajian Karyawan 2023', 'REF1111', '8200000', '8000000', '200000', '2023-02-01', 'gambar_667ae155499ec.jpg', NULL),
+(1112, 'Penggajian Karyawan 2023', 'REF1112', '8500000', '8300000', '200000', '2023-03-01', 'gambar_667ae155499ec.jpg', NULL),
+(1113, 'Pendapatan Tahun Baru 2023', 'REF1113', '14500000', '13500000', '1000000', '2023-04-01', 'gambar_667ae155499ec.jpg', NULL),
+(1114, 'Pendapatan Bonus Karyawan 2023', 'REF1114', '13500000', '12500000', '1000000', '2023-05-01', 'gambar_667ae155499ec.jpg', NULL),
+(1115, 'Pendapatan Akhir Tahun 2023', 'REF1115', '15000000', '14000000', '1000000', '2023-06-01', 'gambar_667ae155499ec.jpg', NULL),
+(1201, 'Pendapatan Awal Tahun 2024', 'REF1201', '13000000', '12000000', '1000000', '2024-01-01', 'gambar_667ae155499ec.jpg', NULL),
+(1202, 'Pendapatan Tahun Baru 2024', 'REF1202', '15000000', '14000000', '1000000', '2024-02-01', 'gambar_667ae155499ec.jpg', NULL),
+(1203, 'Pendapatan Bonus Karyawan 2024', 'REF1203', '14000000', '13000000', '1000000', '2024-03-01', 'gambar_667ae155499ec.jpg', NULL),
+(1204, 'Belanja Pengadaan Kantor 2024', 'REF1204', '9500000', '9000000', '500000', '2024-01-01', 'gambar_667ae155499ec.jpg', NULL),
+(1206, 'Belanja Maintenance 2024', 'REF1206', '11000000', '10500000', '500000', '2024-03-01', 'gambar_667ae155499ec.jpg', NULL),
+(1207, 'Pembiayaan Pembaruan Sistem 2024', 'REF1207', '6500000', '6300000', '200000', '2024-01-01', 'gambar_667ae155499ec.jpg', NULL),
+(1210, 'Penggajian Karyawan 2024', 'REF1210', '8500000', '8300000', '200000', '2024-01-01', 'gambar_667ae155499ec.jpg', NULL),
+(1211, 'Penggajian Karyawan 2024', 'REF1211', '8700000', '8500000', '200000', '2024-02-01', 'gambar_667ae155499ec.jpg', NULL),
+(1212, 'Penggajian Karyawan 2024', 'REF1212', '9000000', '8800000', '200000', '2024-03-01', 'gambar_667ae155499ec.jpg', NULL),
+(1214, 'Pendapatan Bonus Karyawan 2024', 'REF1214', '14500000', '13500000', '1000000', '2024-05-01', 'gambar_667ae155499ec.jpg', NULL),
+(1215, 'Pendapatan Akhir Tahun 2024', 'REF1215', '16000000', '15000000', '1000000', '2024-06-01', 'gambar_667ae155499ec.jpg', NULL),
+(1216, 'a', 'tef', '100000', '1000000', '900000', '2000-06-27', 'gambar_667c5f792ad53.jpg', NULL),
+(1217, 'cek cek ', '', '1000000', '2000000', '1000000', '1999-12-12', 'gambar_667c5f067c23a.jpg', NULL),
+(1218, 'Pembelian Takjil', 'Takjil', '100000', '100000', '0', '2024-06-27', 'gambar_667c600760861.png', NULL),
+(1220, 'lorem', 'xxx', '100000', '10000', '90000', '2024-06-27', 'gambar_667d547b01d90.jpg', NULL),
+(1221, 'xxxx', 'xxx', '212121', '121212', '90909', '2024-06-27', 'gambar_667d564d5de53.jpg', '   dfsfds  ');
 
 -- --------------------------------------------------------
 
@@ -235,7 +237,7 @@ ALTER TABLE `kategori`
 -- AUTO_INCREMENT for table `laporan_keuangan`
 --
 ALTER TABLE `laporan_keuangan`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1220;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1222;
 
 --
 -- AUTO_INCREMENT for table `user`

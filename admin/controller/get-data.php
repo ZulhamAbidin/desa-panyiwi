@@ -1,7 +1,7 @@
 <?php
 include '../../koneksi.php';
 
-$query = "SELECT lk.id, lk.uraian, lk.ref, lk.anggaran, lk.realisasi, lk.periode, lk.gambar, k.nama_kategori
+$query = "SELECT lk.id, lk.uraian, lk.ref, lk.anggaran, lk.realisasi, lk.periode, lk.gambar, lk.deskripsi_gambar, k.nama_kategori
           FROM laporan_keuangan lk
           LEFT JOIN laporan_kategori lktr ON lk.id = lktr.laporan_id
           LEFT JOIN kategori k ON lktr.kategori_id = k.id";
@@ -39,6 +39,7 @@ if ($result && $result->num_rows > 0) {
             'Periode' => $row['periode'],
             'Kategori' => $row['nama_kategori'],
             'Gambar' => $row['gambar'],
+            'Deskripsi Gambar' => $row['deskripsi_gambar'],
             'Action' => $actionColumn
         ];
         $no++;
