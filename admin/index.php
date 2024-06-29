@@ -290,5 +290,4 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
             });
         });
 </script>
-
 <?php include 'src/footer.php'; ?>
