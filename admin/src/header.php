@@ -155,6 +155,18 @@ $dt     = mysqli_fetch_array($ambil);
                             </li>
 
                             <li>
+                                <a class="side-menu__item has-link" href="list_pegawai.php"><i class="side-menu__icon fe fe-settings"></i><span class="side-menu__label">list_pegawai</span></a>
+                            </li>
+
+                            <li>
+                                <a class="side-menu__item has-link" href="list_gaji.php"><i class="side-menu__icon fe fe-settings"></i><span class="side-menu__label">gaji</span></a>
+                            </li>
+
+                            <li>
+                                <a class="side-menu__item has-link" href="create_gaji.php"><i class="side-menu__icon fe fe-settings"></i><span class="side-menu__label">input_gaji</span></a>
+                            </li>
+
+                            <li>
                                 <a class="side-menu__item has-link" href="list.php"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">List Data Keuangan</span></a>
                             </li>
 
