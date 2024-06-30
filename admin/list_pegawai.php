@@ -129,7 +129,7 @@ if (isset($_SESSION['error_message'])) {
             ]
         });
 
-        $('#pegawaiTable').on('click', '.delete-btn', function() {
+        $('#pegawaiTable').on('click', '.delete-btn', function () {
     var id = $(this).data('id');
     var nama = $(this).data('nama');
 
@@ -142,7 +142,7 @@ if (isset($_SESSION['error_message'])) {
                 forceDelete: true
             },
             dataType: 'json',
-            success: function(response) {
+            success: function (response) {
                 if (response.status === 'success') {
                     table.ajax.reload();
                     Swal.fire(
@@ -158,7 +158,7 @@ if (isset($_SESSION['error_message'])) {
                     );
                 }
             },
-            error: function() {
+            error: function () {
                 Swal.fire(
                     'Gagal!',
                     'Terjadi kesalahan saat menghubungi server.',
@@ -176,11 +176,12 @@ if (isset($_SESSION['error_message'])) {
             id: id
         },
         dataType: 'json',
-        success: function(response) {
+        success: function (response) {
             if (response.status === 'has_gaji_data') {
                 Swal.fire({
                     title: 'Data Pegawai Memiliki Data Gaji',
-                    html: 'Data pegawai <strong>' + nama + '</strong> memiliki data di tabel gaji. Apakah Anda yakin ingin menghapus?',
+                    html: 'Data pegawai <strong>' + nama +
+                        '</strong> memiliki data di tabel gaji. Apakah Anda yakin ingin menghapus?',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
@@ -215,7 +216,7 @@ if (isset($_SESSION['error_message'])) {
                 );
             }
         },
-        error: function() {
+        error: function () {
             Swal.fire(
                 'Gagal!',
                 'Terjadi kesalahan saat menghubungi server.',
@@ -224,6 +225,7 @@ if (isset($_SESSION['error_message'])) {
         }
     });
 });
+
 
 
     });

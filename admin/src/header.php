@@ -166,6 +166,7 @@ $dt     = mysqli_fetch_array($ambil);
                                 <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z" />
                             </svg></div>
                         <ul class="side-menu">
+
                             <li class="sub-category">
                                 <h3>Main</h3>
                             </li>
@@ -177,7 +178,7 @@ $dt     = mysqli_fetch_array($ambil);
                             </li>
 
                             <li class="sub-category">
-                                <h3>Penggajian</h3>
+                                <h3>Pengelolaan Keuangan</h3>
                             </li>
 
 
@@ -196,9 +197,9 @@ $dt     = mysqli_fetch_array($ambil);
                                 </ul>
                             </li>
 
-                            <li class="sub-category">
+                            <!-- <li class="sub-category">
                                 <h3>Kepegawaian</h3>
-                            </li>
+                            </li> -->
 
                             <li class="slide">
                                 <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
@@ -212,9 +213,9 @@ $dt     = mysqli_fetch_array($ambil);
                                 </ul>
                             </li>
 
-                            <li class="sub-category">
+                            <!-- <li class="sub-category">
                                 <h3>Operasional</h3>
-                            </li>
+                            </li> -->
 
                             <li class="slide">
                                 <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i

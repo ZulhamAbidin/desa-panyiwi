@@ -183,24 +183,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <script>
 
-    function showAlert(message, showListButton) {
+    function showAlert(message) {
         Swal.fire({
             icon: 'warning',
             title: 'Perhatian',
             text: message,
             confirmButtonColor: '#3085d6',
-            confirmButtonText: 'OK',
-            showCancelButton: showListButton,
-            cancelButtonText: 'Lihat List Penggajian',
-            cancelButtonColor: '#d33',
-        }).then((result) => {
-            if (result.isConfirmed) {
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                window.location.href = 'list_penggajian.php';
-            }
+            confirmButtonText: 'OK'
         });
     }
-
 
     document.addEventListener('DOMContentLoaded', function () {
     var formatRupiah = function (angka, prefix) {

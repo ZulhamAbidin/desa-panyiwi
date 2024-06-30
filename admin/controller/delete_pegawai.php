@@ -28,12 +28,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             $stmt_gaji = $koneksi->prepare($sql_delete_gaji);
             $stmt_gaji->bind_param("i", $id);
             $stmt_gaji->execute();
+            $stmt_gaji->close();
+
+            // Hapus data di tabel gaji_otomatis
+            $sql_delete_gaji_otomatis = "DELETE FROM gaji_otomatis WHERE pegawai_id = ?";
+            $stmt_gaji_otomatis = $koneksi->prepare($sql_delete_gaji_otomatis);
+            $stmt_gaji_otomatis->bind_param("i", $id);
+            $stmt_gaji_otomatis->execute();
+            $stmt_gaji_otomatis->close();
 
             // Hapus data di tabel pegawai
             $sql_delete_pegawai = "DELETE FROM pegawai WHERE id = ?";
             $stmt_pegawai = $koneksi->prepare($sql_delete_pegawai);
             $stmt_pegawai->bind_param("i", $id);
             $stmt_pegawai->execute();
+            $stmt_pegawai->close();
 
             echo json_encode(['status' => 'success']);
         } else {

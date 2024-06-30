@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jun 27, 2024 at 12:09 PM
+-- Generation Time: Jun 30, 2024 at 02:33 PM
 -- Server version: 8.0.30
--- PHP Version: 8.2.16
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,6 +24,75 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `gaji_otomatis`
+--
+
+CREATE TABLE `gaji_otomatis` (
+  `id` int NOT NULL,
+  `pegawai_id` int DEFAULT NULL,
+  `gaji_pokok` decimal(15,0) DEFAULT NULL,
+  `tunjangan` decimal(15,0) DEFAULT NULL,
+  `bonus` decimal(15,0) DEFAULT NULL,
+  `potongan` decimal(15,0) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `gaji_otomatis`
+--
+
+INSERT INTO `gaji_otomatis` (`id`, `pegawai_id`, `gaji_pokok`, `tunjangan`, `bonus`, `potongan`) VALUES
+(41, 1, '1000000', '1000000', '1000000', '0');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `gaji_pegawai`
+--
+
+CREATE TABLE `gaji_pegawai` (
+  `id` int NOT NULL,
+  `pegawai_id` int NOT NULL,
+  `periode` date NOT NULL,
+  `gaji_pokok` decimal(15,0) NOT NULL,
+  `tunjangan` decimal(15,0) DEFAULT NULL,
+  `potongan` decimal(15,0) DEFAULT NULL,
+  `bonus` decimal(15,0) DEFAULT NULL,
+  `total_gaji` decimal(15,0) NOT NULL,
+  `tanggal_pembayaran` date DEFAULT NULL,
+  `metode_pembayaran` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `gaji_pegawai`
+--
+
+INSERT INTO `gaji_pegawai` (`id`, `pegawai_id`, `periode`, `gaji_pokok`, `tunjangan`, `potongan`, `bonus`, `total_gaji`, `tanggal_pembayaran`, `metode_pembayaran`) VALUES
+(24, 1, '2024-06-30', '234', '234', '234', '234', '468', '2024-06-30', 'Gopay');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `histori_gaji`
+--
+
+CREATE TABLE `histori_gaji` (
+  `id` int NOT NULL,
+  `pegawai_id` int NOT NULL,
+  `gaji_pegawai_id` int NOT NULL,
+  `tanggal` date NOT NULL,
+  `keterangan` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `histori_gaji`
+--
+
+INSERT INTO `histori_gaji` (`id`, `pegawai_id`, `gaji_pegawai_id`, `tanggal`, `keterangan`) VALUES
+(24, 1, 24, '2024-06-30', 'Gaji untuk periode 2024-08-30');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `kategori`
 --
 
@@ -31,9 +100,6 @@ CREATE TABLE `kategori` (
   `id` int NOT NULL,
   `nama_kategori` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-  -- webhosting
-  -- ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `kategori`
@@ -70,7 +136,6 @@ INSERT INTO `laporan_kategori` (`laporan_id`, `kategori_id`) VALUES
 (1008, 3),
 (1009, 3),
 (1010, 4),
-(1011, 4),
 (1013, 1),
 (1014, 1),
 (1015, 1),
@@ -104,7 +169,8 @@ INSERT INTO `laporan_kategori` (`laporan_id`, `kategori_id`) VALUES
 (1217, 1),
 (1218, 2),
 (1220, 1),
-(1221, 1);
+(1221, 1),
+(1222, 3);
 
 -- --------------------------------------------------------
 
@@ -138,7 +204,6 @@ INSERT INTO `laporan_keuangan` (`id`, `uraian`, `ref`, `anggaran`, `realisasi`, 
 (1008, 'Pembiayaan Investasi 2022', 'REF1008', '6000000', '5500000', '500000', '2022-02-01', 'gambar_667ae155499ec.jpg', NULL),
 (1009, 'Pembiayaan Proyek Strategis 2022', '', '6500000', '6000000', '500000', '2022-03-01', 'gambar_667c5d1315bc2.jpg', NULL),
 (1010, 'Penggajian Karyawan 2022', 'REF1010', '7500000', '7300000', '200000', '2022-01-01', 'gambar_667ae155499ec.jpg', NULL),
-(1011, 'Penggajian Karyawan 2022', 'REF1011', '7700000', '7500000', '200000', '2022-02-01', 'gambar_667ae155499ec.jpg', NULL),
 (1013, 'Pendapatan Tahun Baru 2022', 'REF1013', '13500000', '12500000', '1000000', '2022-04-01', 'gambar_667ae155499ec.jpg', NULL),
 (1014, 'Pendapatan Bonus Karyawan 2022', 'REF1014', '12500000', '11500000', '1000000', '2022-05-01', 'gambar_667ae155499ec.jpg', NULL),
 (1015, 'Pendapatan Akhir Tahun 2022', 'REF1015', '14000000', '13000000', '1000000', '2022-06-01', 'gambar_667ae155499ec.jpg', NULL),
@@ -172,7 +237,69 @@ INSERT INTO `laporan_keuangan` (`id`, `uraian`, `ref`, `anggaran`, `realisasi`, 
 (1217, 'cek cek ', '', '1000000', '2000000', '1000000', '1999-12-12', 'gambar_667c5f067c23a.jpg', NULL),
 (1218, 'Pembelian Takjil', 'Takjil', '100000', '100000', '0', '2024-06-27', 'gambar_667c600760861.png', NULL),
 (1220, 'lorem', 'xxx', '100000', '10000', '90000', '2024-06-27', 'gambar_667d547b01d90.jpg', NULL),
-(1221, 'xxxx', 'xxx', '212121', '121212', '90909', '2024-06-27', 'gambar_667d564d5de53.jpg', '   dfsfds  ');
+(1221, 'xxxx', 'xxx', '212121', '121212', '90909', '2024-06-27', 'gambar_667d564d5de53.jpg', '   dfsfds  '),
+(1222, 'aaa', 'aaaa', '1111111', '111111', '1000000', '2024-06-30', 'gambar_6681694744e7d.jpg', ' sdffsddfs');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `laporan_penggajian`
+--
+
+CREATE TABLE `laporan_penggajian` (
+  `id` int NOT NULL,
+  `periode` enum('bulanan','triwulanan','tahunan') NOT NULL,
+  `tanggal_dibuat` date NOT NULL,
+  `total_gaji` decimal(15,0) NOT NULL,
+  `total_tunjangan` decimal(15,0) DEFAULT NULL,
+  `total_potongan` decimal(15,0) DEFAULT NULL,
+  `total_bonus` decimal(15,0) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pegawai`
+--
+
+CREATE TABLE `pegawai` (
+  `id` int NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `jabatan` varchar(100) NOT NULL,
+  `nomor_identifikasi` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `nomor_telepon` varchar(20) DEFAULT NULL,
+  `alamat` text,
+  `periode_pembayaran` enum('bulanan','triwulanan','tahunan') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `pegawai`
+--
+
+INSERT INTO `pegawai` (`id`, `nama`, `jabatan`, `nomor_identifikasi`, `email`, `nomor_telepon`, `alamat`, `periode_pembayaran`) VALUES
+(1, 'Zulham Abidin', 'Ketua Umum', '1929042004', 'zlhm378@gmail.com', '0895801138822', 'Gowa', 'triwulanan');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `slip_gaji`
+--
+
+CREATE TABLE `slip_gaji` (
+  `id` int NOT NULL,
+  `pegawai_id` int NOT NULL,
+  `gaji_pegawai_id` int NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `tanggal_dibuat` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `slip_gaji`
+--
+
+INSERT INTO `slip_gaji` (`id`, `pegawai_id`, `gaji_pegawai_id`, `file_path`, `tanggal_dibuat`) VALUES
+(24, 1, 24, '66814a9c8fd28.png', '2024-06-30');
 
 -- --------------------------------------------------------
 
@@ -199,6 +326,28 @@ INSERT INTO `user` (`id_admin`, `nama`, `username`, `password`) VALUES
 --
 
 --
+-- Indexes for table `gaji_otomatis`
+--
+ALTER TABLE `gaji_otomatis`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pegawai_id` (`pegawai_id`);
+
+--
+-- Indexes for table `gaji_pegawai`
+--
+ALTER TABLE `gaji_pegawai`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pegawai_id` (`pegawai_id`);
+
+--
+-- Indexes for table `histori_gaji`
+--
+ALTER TABLE `histori_gaji`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pegawai_id` (`pegawai_id`),
+  ADD KEY `gaji_pegawai_id` (`gaji_pegawai_id`);
+
+--
 -- Indexes for table `kategori`
 --
 ALTER TABLE `kategori`
@@ -218,6 +367,28 @@ ALTER TABLE `laporan_keuangan`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `laporan_penggajian`
+--
+ALTER TABLE `laporan_penggajian`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `pegawai`
+--
+ALTER TABLE `pegawai`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `nomor_identifikasi` (`nomor_identifikasi`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `slip_gaji`
+--
+ALTER TABLE `slip_gaji`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pegawai_id` (`pegawai_id`),
+  ADD KEY `gaji_pegawai_id` (`gaji_pegawai_id`);
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
@@ -226,6 +397,24 @@ ALTER TABLE `user`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `gaji_otomatis`
+--
+ALTER TABLE `gaji_otomatis`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+
+--
+-- AUTO_INCREMENT for table `gaji_pegawai`
+--
+ALTER TABLE `gaji_pegawai`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT for table `histori_gaji`
+--
+ALTER TABLE `histori_gaji`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `kategori`
@@ -237,7 +426,25 @@ ALTER TABLE `kategori`
 -- AUTO_INCREMENT for table `laporan_keuangan`
 --
 ALTER TABLE `laporan_keuangan`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1222;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1223;
+
+--
+-- AUTO_INCREMENT for table `laporan_penggajian`
+--
+ALTER TABLE `laporan_penggajian`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `pegawai`
+--
+ALTER TABLE `pegawai`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
+-- AUTO_INCREMENT for table `slip_gaji`
+--
+ALTER TABLE `slip_gaji`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -250,11 +457,37 @@ ALTER TABLE `user`
 --
 
 --
+-- Constraints for table `gaji_otomatis`
+--
+ALTER TABLE `gaji_otomatis`
+  ADD CONSTRAINT `gaji_otomatis_ibfk_1` FOREIGN KEY (`pegawai_id`) REFERENCES `pegawai` (`id`);
+
+--
+-- Constraints for table `gaji_pegawai`
+--
+ALTER TABLE `gaji_pegawai`
+  ADD CONSTRAINT `gaji_pegawai_ibfk_1` FOREIGN KEY (`pegawai_id`) REFERENCES `pegawai` (`id`);
+
+--
+-- Constraints for table `histori_gaji`
+--
+ALTER TABLE `histori_gaji`
+  ADD CONSTRAINT `histori_gaji_ibfk_1` FOREIGN KEY (`pegawai_id`) REFERENCES `pegawai` (`id`),
+  ADD CONSTRAINT `histori_gaji_ibfk_2` FOREIGN KEY (`gaji_pegawai_id`) REFERENCES `gaji_pegawai` (`id`);
+
+--
 -- Constraints for table `laporan_kategori`
 --
 ALTER TABLE `laporan_kategori`
   ADD CONSTRAINT `laporan_kategori_ibfk_1` FOREIGN KEY (`laporan_id`) REFERENCES `laporan_keuangan` (`id`),
   ADD CONSTRAINT `laporan_kategori_ibfk_2` FOREIGN KEY (`kategori_id`) REFERENCES `kategori` (`id`);
+
+--
+-- Constraints for table `slip_gaji`
+--
+ALTER TABLE `slip_gaji`
+  ADD CONSTRAINT `slip_gaji_ibfk_1` FOREIGN KEY (`pegawai_id`) REFERENCES `pegawai` (`id`),
+  ADD CONSTRAINT `slip_gaji_ibfk_2` FOREIGN KEY (`gaji_pegawai_id`) REFERENCES `gaji_pegawai` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
