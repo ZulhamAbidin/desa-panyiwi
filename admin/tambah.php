@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <div class="page-header">
-    <h1 class="page-title">Tambah Data Keuangan</h1>
+    <h1 class="page-title">Tambah Data Operasional</h1>
 </div>
 
 <div class="card">

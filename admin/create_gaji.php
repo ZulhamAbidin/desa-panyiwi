@@ -2,8 +2,7 @@
 include 'src/header.php';
 include '../koneksi.php';
 
-function formatRupiahToNumber($rupiah)
-{
+function formatRupiahToNumber($rupiah) {
     return (int) preg_replace('/[^0-9]/', '', $rupiah);
 }
 
@@ -21,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tanggal_pembayaran = $_POST['tanggal_pembayaran'];
     $metode_pembayaran = $_POST['metode_pembayaran'];
 
-    $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/keuangan/admin/gambar/';
+    $uploadDir = __DIR__ . '/gambar/';
     $file_path = '';
 
     if ($_FILES['bukti_pembayaran']['size'] > 0) {
@@ -63,15 +62,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if ($stmt_slip->execute()) {
                     $_SESSION['success_message'] = "Gaji pegawai dan histori berhasil disimpan!";
                 } else {
-                    $_SESSION['error_message'] = "Gagal menyimpan slip gaji: " . $koneksi->error;
+                    $_SESSION['error_message'] = "Gagal menyimpan slip gaji: " . $stmt_slip->error;
                 }
                 $stmt_slip->close();
             } else {
-                $_SESSION['error_message'] = "Gagal menyimpan histori gaji: " . $koneksi->error;
+                $_SESSION['error_message'] = "Gagal menyimpan histori gaji: " . $stmt_histori->error;
             }
             $stmt_histori->close();
         } else {
-            $_SESSION['error_message'] = "Gagal menyimpan gaji pegawai: " . $koneksi->error;
+            $_SESSION['error_message'] = "Gagal menyimpan gaji pegawai: " . $stmt->error;
         }
         $stmt->close();
 
@@ -91,7 +90,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
 <div class="page-header">
     <h1 class="page-title">Input Gaji Pegawai</h1>
 </div>
@@ -102,22 +100,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 <?php endif; ?>
 
+<!-- Lorem, ipsum dolor sit amet consectetur adipisicing elit. Est aspernatur magnam neque fugiat unde. Fugit consectetur veritatis nostrum corporis pariatur, dicta ipsa ad hic aliquid dolorem vel consequuntur laboriosam qui? -->
+
 <div class="card">
     <div class="card-body">
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"
-            enctype="multipart/form-data">
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-12 col-md-6 mb-4">
                     <label for="pegawai_id">Pegawai:</label>
                     <select class="form-control" id="pegawai_id" name="pegawai_id" required>
                         <option value="" disabled selected>Pilih Pegawai</option>
                         <?php
-                    $sql_pegawai = "SELECT id, nama FROM pegawai";
-                    $result_pegawai = $koneksi->query($sql_pegawai);
-                    while ($row = $result_pegawai->fetch_assoc()) {
-                        echo '<option value="' . $row['id'] . '">' . $row['nama'] . '</option>';
-                    }
-                    ?>
+                        $sql_pegawai = "SELECT id, nama FROM pegawai";
+                        $result_pegawai = $koneksi->query($sql_pegawai);
+                        while ($row = $result_pegawai->fetch_assoc()) {
+                            echo '<option value="' . $row['id'] . '">' . $row['nama'] . '</option>';
+                        }
+                        ?>
                     </select>
                 </div>
                 <div class="col-12 col-md-6 mb-4">
@@ -127,18 +126,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="col-12 col-md-6 mb-4">
                     <label for="gaji_pokok">Gaji Pokok:</label>
                     <input type="text" class="form-control" id="gaji_pokok" name="gaji_pokok" required>
+                    <small class="text-primary">Jika Terisi Secara Otomatis Data Tersebut Diambil Dari Komponen Penggajian</small>
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="tunjangan">Tunjangan:</label>
                     <input type="text" class="form-control" id="tunjangan" name="tunjangan">
+                    <small class="text-primary">Jika Terisi Secara Otomatis Data Tersebut Diambil Dari Komponen Penggajian</small>
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="potongan">Potongan:</label>
                     <input type="text" class="form-control" id="potongan" name="potongan">
+                    <small class="text-primary">Jika Terisi Secara Otomatis Data Tersebut Diambil Dari Komponen Penggajian</small>
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="bonus">Bonus:</label>
                     <input type="text" class="form-control" id="bonus" name="bonus">
+                    <small class="text-primary">Jika Terisi Secara Otomatis Data Tersebut Diambil Dari Komponen Penggajian</small>
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="tanggal_pembayaran">Tanggal Pembayaran:</label>
@@ -146,32 +149,60 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="metode_pembayaran">Metode Pembayaran:</label>
-                    <select class="form-control" id="metode_pembayaran" name="metode_pembayaran" required>
-                        <option value="" disabled selected>Pilih Metode Pembayaran</option>
-                        <option value="Transfer Bank">Transfer Bank</option>
-                        <option value="Cash">Cash</option>
-                        <option value="Gopay">Gopay</option>
-                        <option value="OVO">OVO</option>
-                        <option value="Dana">Dana</option>
-                    </select>
-                </div>
-                <div class="col-12 col-md-6 mb-4">
-                    <label for="total_gaji">Total Gaji:</label>
-                    <input type="text" class="form-control" id="total_gaji" name="total_gaji" readonly>
+                    <input type="text" class="form-control" id="metode_pembayaran" name="metode_pembayaran" required>
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="bukti_pembayaran">Bukti Pembayaran:</label>
                     <input type="file" class="form-control" id="bukti_pembayaran" name="bukti_pembayaran">
                 </div>
-                <div class="col-12 text-end">
-                    <button type="submit" class="btn btn-primary">Simpan Gaji</button>
-                </div>
             </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
 </div>
-
 <script>
+    function checkGajiExistence(pegawaiId, periode) {
+        if (pegawaiId && periode) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'controller/check_gaji.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.status === 'exist') {
+                        alert(response.message);
+                    }
+                }
+            };
+            xhr.send('pegawai_id=' + pegawaiId + '&periode=' + periode);
+        }
+    }
+
+    document.getElementById('pegawai_id').addEventListener('change', function () {
+        var pegawaiId = this.value;
+        var periode = document.getElementById('periode').value;
+        checkGajiExistence(pegawaiId, periode);
+
+        if (pegawaiId) {
+            fetch(`controller/get_gaji_otomatis.php?pegawai_id=${pegawaiId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('gaji_pokok').value = formatRupiah(data.gaji_pokok.toString(), 'Rp. ');
+                    document.getElementById('tunjangan').value = formatRupiah(data.tunjangan.toString(), 'Rp. ');
+                    document.getElementById('bonus').value = formatRupiah(data.bonus.toString(), 'Rp. ');
+                    document.getElementById('potongan').value = formatRupiah(data.potongan.toString(), 'Rp. ');
+                    updateTotalGaji();
+                })
+                .catch(error => console.error('Error fetching gaji otomatis:', error));
+        }
+    });
+
+    document.getElementById('periode').addEventListener('change', function () {
+        var periode = this.value;
+        var pegawaiId = document.getElementById('pegawai_id').value;
+        checkGajiExistence(pegawaiId, periode);
+    });
+
     document.addEventListener('DOMContentLoaded', function () {
         var formatRupiah = function (angka, prefix) {
             var number_string = angka.replace(/[^,\d]/g, "").toString(),
@@ -202,26 +233,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             document.getElementById('total_gaji').value = formatRupiah(total_gaji.toString(), 'Rp. ');
         };
 
-        document.getElementById('pegawai_id').addEventListener('change', function () {
-            var pegawai_id = this.value;
-            if (pegawai_id) {
-                fetch(`controller/get_gaji_otomatis.php?pegawai_id=${pegawai_id}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('gaji_pokok').value = formatRupiah(data.gaji_pokok
-                            .toString(), 'Rp. ');
-                        document.getElementById('tunjangan').value = formatRupiah(data.tunjangan
-                            .toString(), 'Rp. ');
-                        document.getElementById('bonus').value = formatRupiah(data.bonus.toString(),
-                            'Rp. ');
-                        document.getElementById('potongan').value = formatRupiah(data.potongan
-                            .toString(), 'Rp. ');
-                        updateTotalGaji();
-                    })
-                    .catch(error => console.error('Error fetching gaji otomatis:', error));
-            }
-        });
-
         document.querySelectorAll('input[type=text]').forEach(function (input) {
             input.addEventListener('input', function () {
                 input.value = formatRupiah(input.value, 'Rp. ');
@@ -230,4 +241,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
     });
 </script>
+
 <?php include 'src/footer.php'; ?>

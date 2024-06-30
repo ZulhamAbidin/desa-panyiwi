@@ -28,10 +28,10 @@ if (isset($_SESSION['error_message'])) {
 ?>
 
 <div class="page-header">
-    <h1 class="page-title">List Data Keuangan</h1>
+    <h1 class="page-title">List Data Operasional</h1>
     <div>
         <ol class="breadcrumb">
-            <a href="tambah.php" class="btn btn-primary"><i class="fe fe-plus me-2"></i>Tambah Data Keuangan</a>
+            <a href="tambah.php" class="btn btn-primary"><i class="fe fe-plus me-2"></i>Tambah Data Operasional</a>
         </ol>
     </div>
 </div>
