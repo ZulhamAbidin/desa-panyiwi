@@ -155,6 +155,10 @@ $dt     = mysqli_fetch_array($ambil);
                             </li>
 
                             <li>
+                                <a class="side-menu__item has-link" href="settingan_gaji.php"><i class="side-menu__icon fe fe-settings"></i><span class="side-menu__label">settingan_gaji</span></a>
+                            </li>
+
+                            <li>
                                 <a class="side-menu__item has-link" href="list_pegawai.php"><i class="side-menu__icon fe fe-settings"></i><span class="side-menu__label">list_pegawai</span></a>
                             </li>
 

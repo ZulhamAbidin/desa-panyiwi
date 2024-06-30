@@ -97,66 +97,67 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 <?php if (!empty($error_message)): ?>
-    <div class="alert alert-danger" role="alert">
-        <?php echo $error_message; ?>
-    </div>
+<div class="alert alert-danger" role="alert">
+    <?php echo $error_message; ?>
+</div>
 <?php endif; ?>
 
 <div class="card">
     <div class="card-body">
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"
+            enctype="multipart/form-data">
             <div class="row">
                 <div class="col-12 col-md-6 mb-4">
                     <label for="pegawai_id">Pegawai:</label>
                     <select class="form-control" id="pegawai_id" name="pegawai_id" required>
+                        <option value="" disabled selected>Pilih Pegawai</option>
                         <?php
-                        $sql_pegawai = "SELECT id, nama FROM pegawai";
-                        $result_pegawai = $koneksi->query($sql_pegawai);
-                        while ($row = $result_pegawai->fetch_assoc()) {
-                            $selected = ($row['id'] == $pegawai_id) ? 'selected' : '';
-                            echo '<option value="' . $row['id'] . '" ' . $selected . '>' . $row['nama'] . '</option>';
-                        }
-                        ?>
+                    $sql_pegawai = "SELECT id, nama FROM pegawai";
+                    $result_pegawai = $koneksi->query($sql_pegawai);
+                    while ($row = $result_pegawai->fetch_assoc()) {
+                        echo '<option value="' . $row['id'] . '">' . $row['nama'] . '</option>';
+                    }
+                    ?>
                     </select>
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="periode">Periode:</label>
-                    <input type="date" class="form-control" id="periode" name="periode" value="<?php echo $periode; ?>" required>
+                    <input type="date" class="form-control" id="periode" name="periode" required>
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="gaji_pokok">Gaji Pokok:</label>
-                    <input type="text" class="form-control" id="gaji_pokok" name="gaji_pokok" value="<?php echo $gaji_pokok; ?>" required>
+                    <input type="text" class="form-control" id="gaji_pokok" name="gaji_pokok" required>
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="tunjangan">Tunjangan:</label>
-                    <input type="text" class="form-control" id="tunjangan" name="tunjangan" value="<?php echo $tunjangan; ?>">
+                    <input type="text" class="form-control" id="tunjangan" name="tunjangan">
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="potongan">Potongan:</label>
-                    <input type="text" class="form-control" id="potongan" name="potongan" value="<?php echo $potongan; ?>">
+                    <input type="text" class="form-control" id="potongan" name="potongan">
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="bonus">Bonus:</label>
-                    <input type="text" class="form-control" id="bonus" name="bonus" value="<?php echo $bonus; ?>">
+                    <input type="text" class="form-control" id="bonus" name="bonus">
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="tanggal_pembayaran">Tanggal Pembayaran:</label>
-                    <input type="date" class="form-control" id="tanggal_pembayaran" name="tanggal_pembayaran" value="<?php echo $tanggal_pembayaran; ?>" required>
+                    <input type="date" class="form-control" id="tanggal_pembayaran" name="tanggal_pembayaran" required>
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="metode_pembayaran">Metode Pembayaran:</label>
                     <select class="form-control" id="metode_pembayaran" name="metode_pembayaran" required>
                         <option value="" disabled selected>Pilih Metode Pembayaran</option>
-                        <option value="Transfer Bank" <?php echo $metode_pembayaran == 'Transfer Bank' ? 'selected' : ''; ?>>Transfer Bank</option>
-                        <option value="Cash" <?php echo $metode_pembayaran == 'Cash' ? 'selected' : ''; ?>>Cash</option>
-                        <option value="Gopay" <?php echo $metode_pembayaran == 'Gopay' ? 'selected' : ''; ?>>Gopay</option>
-                        <option value="OVO" <?php echo $metode_pembayaran == 'OVO' ? 'selected' : ''; ?>>OVO</option>
-                        <option value="Dana" <?php echo $metode_pembayaran == 'Dana' ? 'selected' : ''; ?>>Dana</option>
+                        <option value="Transfer Bank">Transfer Bank</option>
+                        <option value="Cash">Cash</option>
+                        <option value="Gopay">Gopay</option>
+                        <option value="OVO">OVO</option>
+                        <option value="Dana">Dana</option>
                     </select>
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="total_gaji">Total Gaji:</label>
-                    <input type="text" class="form-control" id="total_gaji" name="total_gaji" value="<?php echo isset($total_gaji) ? formatRupiah($total_gaji) : ''; ?>" readonly>
+                    <input type="text" class="form-control" id="total_gaji" name="total_gaji" readonly>
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="bukti_pembayaran">Bukti Pembayaran:</label>
@@ -201,28 +202,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             document.getElementById('total_gaji').value = formatRupiah(total_gaji.toString(), 'Rp. ');
         };
 
-        // Format initial input values and calculate total gaji
-        document.querySelectorAll('input[type=text]').forEach(function (input) {
-            if (input.value && input.id !== 'metode_pembayaran') {
-                input.value = formatRupiah(input.value, 'Rp. ');
+        document.getElementById('pegawai_id').addEventListener('change', function () {
+            var pegawai_id = this.value;
+            if (pegawai_id) {
+                fetch(`controller/get_gaji_otomatis.php?pegawai_id=${pegawai_id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('gaji_pokok').value = formatRupiah(data.gaji_pokok
+                            .toString(), 'Rp. ');
+                        document.getElementById('tunjangan').value = formatRupiah(data.tunjangan
+                            .toString(), 'Rp. ');
+                        document.getElementById('bonus').value = formatRupiah(data.bonus.toString(),
+                            'Rp. ');
+                        document.getElementById('potongan').value = formatRupiah(data.potongan
+                            .toString(), 'Rp. ');
+                        updateTotalGaji();
+                    })
+                    .catch(error => console.error('Error fetching gaji otomatis:', error));
             }
         });
 
-        // Add input event listeners
         document.querySelectorAll('input[type=text]').forEach(function (input) {
             input.addEventListener('input', function () {
-                if (input.id !== 'metode_pembayaran') {
-                    input.value = formatRupiah(input.value, 'Rp. ');
-                    updateTotalGaji();
-                }
+                input.value = formatRupiah(input.value, 'Rp. ');
+                updateTotalGaji();
             });
         });
-
-        // Initial calculation
-        updateTotalGaji();
     });
 </script>
-
-
-
 <?php include 'src/footer.php'; ?>
