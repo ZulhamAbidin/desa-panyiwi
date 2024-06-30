@@ -100,11 +100,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 <?php endif; ?>
 
-<!-- Lorem, ipsum dolor sit amet consectetur adipisicing elit. Est aspernatur magnam neque fugiat unde. Fugit consectetur veritatis nostrum corporis pariatur, dicta ipsa ad hic aliquid dolorem vel consequuntur laboriosam qui? -->
-
 <div class="card">
     <div class="card-body">
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"
+            enctype="multipart/form-data">
             <div class="row">
                 <div class="col-12 col-md-6 mb-4">
                     <label for="pegawai_id">Pegawai:</label>
@@ -126,31 +125,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="col-12 col-md-6 mb-4">
                     <label for="gaji_pokok">Gaji Pokok:</label>
                     <input type="text" class="form-control" id="gaji_pokok" name="gaji_pokok" required>
-                    <small class="text-primary">Jika Terisi Secara Otomatis Data Tersebut Diambil Dari Komponen Penggajian</small>
+                    <small class="text-primary">Jika Terisi Secara Otomatis Data Tersebut Diambil Dari Komponen
+                        Penggajian</small>
                 </div>
                 <div class="col-12 col-md-6 mb-4">
                     <label for="tunjangan">Tunjangan:</label>
                     <input type="text" class="form-control" id="tunjangan" name="tunjangan">
-                    <small class="text-primary">Jika Terisi Secara Otomatis Data Tersebut Diambil Dari Komponen Penggajian</small>
+                    <small class="text-primary">Jika Terisi Secara Otomatis Data Tersebut Diambil Dari Komponen
+                        Penggajian</small>
                 </div>
+
                 <div class="col-12 col-md-6 mb-4">
                     <label for="potongan">Potongan:</label>
                     <input type="text" class="form-control" id="potongan" name="potongan">
-                    <small class="text-primary">Jika Terisi Secara Otomatis Data Tersebut Diambil Dari Komponen Penggajian</small>
+                    <small class="text-primary">Jika Terisi Secara Otomatis Data Tersebut Diambil Dari Komponen
+                        Penggajian</small>
                 </div>
+
                 <div class="col-12 col-md-6 mb-4">
                     <label for="bonus">Bonus:</label>
                     <input type="text" class="form-control" id="bonus" name="bonus">
-                    <small class="text-primary">Jika Terisi Secara Otomatis Data Tersebut Diambil Dari Komponen Penggajian</small>
+                    <small class="text-primary">Jika Terisi Secara Otomatis Data Tersebut Diambil Dari Komponen
+                        Penggajian</small>
                 </div>
+                
                 <div class="col-12 col-md-6 mb-4">
                     <label for="tanggal_pembayaran">Tanggal Pembayaran:</label>
                     <input type="date" class="form-control" id="tanggal_pembayaran" name="tanggal_pembayaran" required>
                 </div>
-                <div class="col-12 col-md-6 mb-4">
+
+                <!-- <div class="col-12 col-md-6 mb-4">
                     <label for="metode_pembayaran">Metode Pembayaran:</label>
                     <input type="text" class="form-control" id="metode_pembayaran" name="metode_pembayaran" required>
+                </div> -->
+
+                <div class="col-12 col-md-6 mb-4">
+                    <label for="metode_pembayaran">Metode Pembayaran:</label>
+                    <select class="form-control" id="metode_pembayaran" name="metode_pembayaran" required="">
+                        <option value="" disabled="">Pilih Metode Pembayaran</option>
+                        <option value="Transfer Bank">Transfer Bank</option>
+                        <option value="Cash">Cash</option>
+                        <option value="Gopay">Gopay</option>
+                        <option value="OVO">OVO</option>
+                        <option value="Dana">Dana</option>
+                    </select>
                 </div>
+
                 <div class="col-12 col-md-6 mb-4">
                     <label for="bukti_pembayaran">Bukti Pembayaran:</label>
                     <input type="file" class="form-control" id="bukti_pembayaran" name="bukti_pembayaran">
@@ -160,8 +180,62 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
     </div>
 </div>
+
 <script>
-    function checkGajiExistence(pegawaiId, periode) {
+
+    function showAlert(message, showListButton) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Perhatian',
+            text: message,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK',
+            showCancelButton: showListButton,
+            cancelButtonText: 'Lihat List Penggajian',
+            cancelButtonColor: '#d33',
+        }).then((result) => {
+            if (result.isConfirmed) {
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                window.location.href = 'list_penggajian.php';
+            }
+        });
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+    var formatRupiah = function (angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, "").toString(),
+            split = number_string.split(","),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/g);
+
+        if (ribuan) {
+            var separator = sisa ? "." : "";
+            rupiah += separator + ribuan.join(".");
+        }
+
+        rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? "Rp. " + rupiah : "");
+    };
+
+    var formatRupiahToNumber = function (rupiah) {
+        return parseInt(rupiah.replace(/[^0-9]/g, ''), 10) || 0;
+    };
+
+    var updateTotalGaji = function () {
+        var gaji_pokok = formatRupiahToNumber(document.getElementById('gaji_pokok').value);
+        var tunjangan = formatRupiahToNumber(document.getElementById('tunjangan').value);
+        var potongan = formatRupiahToNumber(document.getElementById('potongan').value);
+        var bonus = formatRupiahToNumber(document.getElementById('bonus').value);
+        var total_gaji = gaji_pokok + tunjangan - potongan + bonus;
+        document.getElementById('total_gaji').value = formatRupiah(total_gaji.toString(), 'Rp. ');
+    };
+
+    function checkSalary() {
+        var pegawaiId = document.getElementById('pegawai_id').value;
+        var periode = document.getElementById('periode').value;
+
         if (pegawaiId && periode) {
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'controller/check_gaji.php', true);
@@ -170,7 +244,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
                     if (response.status === 'exist') {
-                        alert(response.message);
+                        showAlert(response.message);
                     }
                 }
             };
@@ -179,29 +253,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     document.getElementById('pegawai_id').addEventListener('change', function () {
-        var pegawaiId = this.value;
-        var periode = document.getElementById('periode').value;
-        checkGajiExistence(pegawaiId, periode);
-
-        if (pegawaiId) {
-            fetch(`controller/get_gaji_otomatis.php?pegawai_id=${pegawaiId}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('gaji_pokok').value = formatRupiah(data.gaji_pokok.toString(), 'Rp. ');
-                    document.getElementById('tunjangan').value = formatRupiah(data.tunjangan.toString(), 'Rp. ');
-                    document.getElementById('bonus').value = formatRupiah(data.bonus.toString(), 'Rp. ');
-                    document.getElementById('potongan').value = formatRupiah(data.potongan.toString(), 'Rp. ');
-                    updateTotalGaji();
-                })
-                .catch(error => console.error('Error fetching gaji otomatis:', error));
-        }
+        checkSalary();
     });
 
     document.getElementById('periode').addEventListener('change', function () {
-        var periode = this.value;
-        var pegawaiId = document.getElementById('pegawai_id').value;
-        checkGajiExistence(pegawaiId, periode);
+        checkSalary();
     });
+
+    document.querySelectorAll('.rupiah-input').forEach(function (input) {
+        input.addEventListener('keyup', function (e) {
+            var angka = input.value.replace(/[^,\d]/g, "").toString();
+            input.value = formatRupiah(angka, 'Rp. ');
+            updateTotalGaji();
+        });
+    });
+});
+
+</script>
+<!-- jangan di ganggu -->
+<script>
 
     document.addEventListener('DOMContentLoaded', function () {
         var formatRupiah = function (angka, prefix) {
@@ -232,6 +302,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             var total_gaji = gaji_pokok + tunjangan - potongan + bonus;
             document.getElementById('total_gaji').value = formatRupiah(total_gaji.toString(), 'Rp. ');
         };
+
+        document.getElementById('pegawai_id').addEventListener('change', function () {
+            var pegawai_id = this.value;
+            if (pegawai_id) {
+                fetch(`controller/get_gaji_otomatis.php?pegawai_id=${pegawai_id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('gaji_pokok').value = formatRupiah(data.gaji_pokok
+                            .toString(), 'Rp. ');
+                        document.getElementById('tunjangan').value = formatRupiah(data.tunjangan
+                            .toString(), 'Rp. ');
+                        document.getElementById('bonus').value = formatRupiah(data.bonus.toString(),
+                            'Rp. ');
+                        document.getElementById('potongan').value = formatRupiah(data.potongan
+                            .toString(), 'Rp. ');
+                        updateTotalGaji();
+                    })
+                    .catch(error => console.error('Error fetching gaji otomatis:', error));
+            }
+        });
 
         document.querySelectorAll('input[type=text]').forEach(function (input) {
             input.addEventListener('input', function () {
