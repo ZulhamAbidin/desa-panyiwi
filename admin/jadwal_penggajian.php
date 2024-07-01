@@ -23,27 +23,50 @@
             const tanggalPembayaran = $(this).data('tanggal_pembayaran');
             const metodePembayaran = $(this).data('metode_pembayaran');
 
-            $.ajax({
-                url: 'controller/proses_pembayaran.php',
-                method: 'POST',
-                data: {
-                    pegawai_id: pegawaiId,
-                    pembayaran_yang_akan_datang: pembayaranYangAkanDatang,
-                    gaji_pokok: gajiPokok,
-                    tunjangan: tunjangan,
-                    potongan: potongan,
-                    bonus: bonus,
-                    total_gaji: totalGaji,
-                    tanggal_pembayaran: tanggalPembayaran,
-                    metode_pembayaran: metodePembayaran
-                },
-                success: function (response) {
-                    console.log('Pembayaran berhasil diproses:', response);
-                    alert('Pembayaran berhasil diproses!');
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan saat memproses pembayaran.');
+            Swal.fire({
+                title: 'Konfirmasi Pembayaran',
+                text: "Apakah Anda yakin ingin memproses pembayaran ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, bayar sekarang!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'controller/proses_pembayaran.php',
+                        method: 'POST',
+                        data: {
+                            pegawai_id: pegawaiId,
+                            pembayaran_yang_akan_datang: pembayaranYangAkanDatang,
+                            gaji_pokok: gajiPokok,
+                            tunjangan: tunjangan,
+                            potongan: potongan,
+                            bonus: bonus,
+                            total_gaji: totalGaji,
+                            tanggal_pembayaran: tanggalPembayaran,
+                            metode_pembayaran: metodePembayaran
+                        },
+                        success: function (response) {
+                            console.log('Pembayaran berhasil diproses:', response);
+                            Swal.fire({
+                                title: 'Sukses!',
+                                text: 'Pembayaran berhasil diproses!',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                location.reload(); // Refresh the page
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error:', error);
+                            Swal.fire(
+                                'Gagal!',
+                                'Terjadi kesalahan saat memproses pembayaran.',
+                                'error'
+                            );
+                        }
+                    });
                 }
             });
         });

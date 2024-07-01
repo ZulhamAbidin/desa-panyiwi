@@ -42,17 +42,17 @@ if ($result->num_rows > 0) {
         $row['tanggal_pembayaran'] = formatTanggal($row['tanggal_pembayaran']);
         $row['aksi'] =
             '
-            <button class="btn btn-danger delete-btn" data-id="' .
+            <button class="btn btn-sm btn-danger delete-btn" data-id="' .
             $row['id'] .
             '" data-pegawai="' .
             $row['pegawai'] .
             '">Hapus</button>
             <a href="edit_gaji.php?id=' .
             $row['id'] .
-            '" class="btn btn-warning edit-btn">Edit</a>
+            '" class="btn btn-sm btn-warning edit-btn">Edit</a>
             <a href="histori_gaji.php?pegawai_id=' .
             $row['pegawai_id'] .
-            '" class="btn btn-info">Histori dan Slip Gaji</a>';
+            '" class="btn btn-sm btn-info">Histori dan Slip Gaji</a>';
         $data[] = $row;
         $no++;
     }

@@ -104,21 +104,19 @@ $pegawai_id = isset($_GET['pegawai_id']) ? $_GET['pegawai_id'] : 0;
                                     </div>
                                     <div class="media-body ms-3 d-flex">
                                         <div class="">
-                                            <p class="fs-15 text-dark fw-bold mb-0">${item.periode_pembayaran}</p>
+                                            <p class="fs-15 text-dark fw-bold mb-0 pt-3">${item.periode_pembayaran}</p>
                                             <div class="row">
-                                                <div class="col-12 col-md-3"><p class="mb-0 fs-13 mt-3 text-dark">Gaji Pokok</p></div>
-                                                <div class="col-12 col-md-3"><p class="mb-0 fs-13 mt-3 text-dark">: ${item.gaji_pokok}</p></div>
-                                                <div class="col-12 col-md-3"><p class="mb-0 fs-13 mt-3 text-dark">Tunjangan</p></div>
-                                                <div class="col-12 col-md-3"><p class="mb-0 fs-13 mt-3 text-dark">: ${item.tunjangan}</p></div>
-                                                <div class="col-12 col-md-3"><p class="mb-0 fs-13 mt-3 text-dark">Potongan </p></div>
-                                                <div class="col-12 col-md-3"><p class="mb-0 fs-13 mt-3 text-dark">: ${item.potongan}</p></div>
-                                                <div class="col-12 col-md-3"><p class="mb-0 fs-13 mt-3 text-dark">Bonus </p></div>
-                                                <div class="col-12 col-md-3"><p class="mb-0 fs-13 mt-3 text-dark">: ${item.bonus}</p></div>
-                                                <div class="col-12 col-md-12"><p class="mb-0 fs-13 mt-3 fw-semibold text-dark">Total : ${item.total_gaji}</p></div>
+                                                <div class="col-12 col-md-6"><p class="mb-0 fs-13 mt-3 text-dark">Gaji Pokok</p></div>
+                                                <div class="col-12 col-md-6"><p class="mb-0 fs-13 mt-3 text-dark">: ${item.gaji_pokok}</p></div>
+                                                <div class="col-12 col-md-6"><p class="mb-0 fs-13 mt-3 text-dark">Tunjangan</p></div>
+                                                <div class="col-12 col-md-6"><p class="mb-0 fs-13 mt-3 text-dark">: ${item.tunjangan}</p></div>
+                                                <div class="col-12 col-md-6"><p class="mb-0 fs-13 mt-3 text-dark">Potongan </p></div>
+                                                <div class="col-12 col-md-6"><p class="mb-0 fs-13 mt-3 text-dark">: ${item.potongan}</p></div>
+                                                <div class="col-12 col-md-6"><p class="mb-0 fs-13 mt-3 text-dark">Bonus </p></div>
+                                                <div class="col-12 col-md-6"><p class="mb-0 fs-13 mt-3 text-dark">: ${item.bonus}</p></div>
+                                                <div class="col-12"><p class="mb-0 fs-13 mt-3 fw-semibold text-dark">Total : ${item.total_gaji}</p></div>
+                                                <div class="col-12"><p class="mb-0 fs-13 mt-3 fw-semibold text-dark">Metode Pembayaran : ${item.metode_pembayaran}</p></div>
                                             </div>
-                                        </div>
-                                        <div class="notify-time">
-                                            <p class="mb-0 fs-11 fw-semibold">${item.metode_pembayaran}</p>
                                         </div>
                                     </div>
                                 </div>

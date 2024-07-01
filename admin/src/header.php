@@ -189,7 +189,7 @@ $dt     = mysqli_fetch_array($ambil);
                                         class="angle fe fe-chevron-right"></i></a>
                                 <ul class="slide-menu">
                                     <li><a href="jadwal_penggajian.php" class="slide-item">Jadwal Penggajian</a></li>
-                                    <li><a href="list_gaji.php" class="slide-item">List Data Penggajian</a></li>
+                                    <li><a href="list_gaji.php" class="slide-item">List Data dan Histori Penggajian</a></li>
                                     <li><a href="create_gaji.php" class="slide-item">Tambah Data Penggajian</a></li>
                                     <li><a href="list_settingan.php" class="slide-item"> List Komponen Penggajian</a>
                                     </li>
