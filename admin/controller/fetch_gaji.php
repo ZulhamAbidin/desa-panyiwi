@@ -1,22 +1,20 @@
 <?php
 include '../../koneksi.php';
 
-// Fungsi untuk memformat Rupiah
 function formatRupiah($angka)
 {
     return 'Rp ' . number_format($angka, 0, ',', '.');
 }
 
-// Fungsi untuk memformat tanggal
 function formatTanggal($tanggal)
 {
     $date = DateTime::createFromFormat('Y-m-d', $tanggal);
     return $date ? $date->format('d-m-Y') : $tanggal;
 }
 
-// Query untuk mengambil data gaji pegawai
 $sql = "SELECT 
             gaji_pegawai.id AS id,
+            pegawai.id AS pegawai_id,
             pegawai.nama AS pegawai,
             gaji_pegawai.periode,
             gaji_pegawai.gaji_pokok,
@@ -51,7 +49,10 @@ if ($result->num_rows > 0) {
             '">Hapus</button>
             <a href="edit_gaji.php?id=' .
             $row['id'] .
-            '" class="btn btn-warning edit-btn">Edit</a>';
+            '" class="btn btn-warning edit-btn">Edit</a>
+            <a href="histori_gaji.php?pegawai_id=' .
+            $row['pegawai_id'] .
+            '" class="btn btn-info">Histori dan Slip Gaji</a>';
         $data[] = $row;
         $no++;
     }
