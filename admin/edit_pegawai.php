@@ -4,15 +4,14 @@ include '../koneksi.php';
 
 $id_pegawai = $_GET['id'];
 
-// Fetch existing data
-$sql = "SELECT nama, jabatan, nomor_identifikasi, email, nomor_telepon, alamat, periode_pembayaran FROM pegawai WHERE id = ?";
+$sql = "SELECT nama, jabatan, nomor_identifikasi, email, nomor_telepon, alamat, periode_pembayaran, foto_pegawai FROM pegawai WHERE id = ?";
 $stmt = $koneksi->prepare($sql);
 $stmt->bind_param("i", $id_pegawai);
 $stmt->execute();
 $stmt->store_result();
 
 if ($stmt->num_rows > 0) {
-    $stmt->bind_result($nama, $jabatan, $nomor_identifikasi, $email, $nomor_telepon, $alamat, $periode_pembayaran);
+    $stmt->bind_result($nama, $jabatan, $nomor_identifikasi, $email, $nomor_telepon, $alamat, $periode_pembayaran, $foto_pegawai);
     $stmt->fetch();
 } else {
     $_SESSION['error_message'] = "Pegawai tidak ditemukan.";
@@ -31,6 +30,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $alamat = $_POST['alamat'];
     $periode_pembayaran = $_POST['periode_pembayaran'];
 
+    // Handle file upload for foto pegawai (optional)
+    $uploadDir = __DIR__ . '/gambar/';
+    $file_path = $foto_pegawai; // Default to current photo if not updated
+
+    if ($_FILES['foto_pegawai']['size'] > 0) {
+        $fileName = basename($_FILES['foto_pegawai']['name']);
+        $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $randomFileName = uniqid() . '.' . $fileExtension;
+        $file_path = $randomFileName;
+        $targetPath = $uploadDir . $randomFileName;
+        if (move_uploaded_file($_FILES['foto_pegawai']['tmp_name'], $targetPath)) {
+            // Hapus foto lama jika ada
+            if (!empty($foto_pegawai)) {
+                unlink($uploadDir . $foto_pegawai);
+            }
+        } else {
+            $_SESSION['error_message'] = "Gagal mengunggah foto pegawai.";
+            header("Location: edit_pegawai.php?id=" . $id_pegawai);
+            exit();
+        }
+    }
+
     $check_sql = "SELECT email, nomor_identifikasi FROM pegawai WHERE (email = ? OR nomor_identifikasi = ?) AND id != ?";
     $stmt_check = $koneksi->prepare($check_sql);
     $stmt_check->bind_param("ssi", $email, $nomor_identifikasi, $id_pegawai);
@@ -47,9 +68,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
     } else {
-        $sql_update = "UPDATE pegawai SET nama = ?, jabatan = ?, nomor_identifikasi = ?, email = ?, nomor_telepon = ?, alamat = ?, periode_pembayaran = ? WHERE id = ?";
+        // Lakukan update data pegawai
+        $sql_update = "UPDATE pegawai SET nama = ?, jabatan = ?, nomor_identifikasi = ?, email = ?, nomor_telepon = ?, alamat = ?, periode_pembayaran = ?, foto_pegawai = ? WHERE id = ?";
         $stmt_update = $koneksi->prepare($sql_update);
-        $stmt_update->bind_param("sssssssi", $nama, $jabatan, $nomor_identifikasi, $email, $nomor_telepon, $alamat, $periode_pembayaran, $id_pegawai);
+        $stmt_update->bind_param("ssssssssi", $nama, $jabatan, $nomor_identifikasi, $email, $nomor_telepon, $alamat, $periode_pembayaran, $file_path, $id_pegawai);
 
         if ($stmt_update->execute()) {
             $_SESSION['success_message'] = "Pegawai berhasil diperbarui";
@@ -72,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div class="card">
     <div class="card-body">
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . "?id=" . $id_pegawai; ?>" method="post">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . "?id=" . $id_pegawai; ?>" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-12 col-md-6 mb-4">
                     <label for="nama">Nama:</label>
@@ -103,8 +125,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <select class="form-control" id="periode_pembayaran" name="periode_pembayaran" required>
                         <option value="bulanan" <?php if ($periode_pembayaran == 'bulanan') echo 'selected'; ?>>Bulanan</option>
                         <option value="triwulanan" <?php if ($periode_pembayaran == 'triwulanan') echo 'selected'; ?>>Triwulanan</option>
-                        <!-- <option value="tahunan" <?php if ($periode_pembayaran == 'tahunan') echo 'selected'; ?>>Tahunan</option> -->
+                        <option value="tahunan" <?php if ($periode_pembayaran == 'tahunan') echo 'selected'; ?>>Tahunan</option>
                     </select>
+                </div>
+                <div class="col-12 col-md-6 mb-4">
+                    <label for="foto_pegawai">Foto Pegawai:</label>
+                    <input type="file" class="form-control" id="foto_pegawai" name="foto_pegawai">
+                    <!-- <?php if (!empty($foto_pegawai)) : ?>
+                        <img src="gambar/<?php echo htmlspecialchars($foto_pegawai); ?>" class="img-fluid mt-2" alt="Foto Pegawai">
+                    <?php endif; ?> -->
                 </div>
                 <div class="col-12 col-md-12 text-end mb-4">
                     <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
@@ -113,6 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
     </div>
 </div>
+
 
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
     <div id="toastSuccess" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">

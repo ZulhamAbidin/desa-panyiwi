@@ -33,14 +33,10 @@ $pegawai_id = isset($_GET['pegawai_id']) ? $_GET['pegawai_id'] : 0;
     <h1 class="page-title">Histori Gaji Pegawai <span id="namaPegawai"></span></h1>
 </div>
 
-<!-- histori hirarki -->
 
 <div class="container">
     <ul class="notification" id="notificationList">
     </ul>
-    <!-- <div class="text-center mb-4">
-        <button class="btn ripple btn-primary w-md">Load more</button>
-    </div> -->
 </div>
 
 <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
@@ -51,7 +47,7 @@ $pegawai_id = isset($_GET['pegawai_id']) ? $_GET['pegawai_id'] : 0;
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <img id="modalImage" src="" alt="Slip Gaji" class="img-fluid">
+                <img id="modalImage" src="" alt="Tidak Ada Gambar Bukti Pembayaran Karena Dilakukan Secara Otomatis" class="img-fluid">
             </div>
         </div>
     </div>
@@ -84,9 +80,13 @@ $pegawai_id = isset($_GET['pegawai_id']) ? $_GET['pegawai_id'] : 0;
                         year: 'numeric'
                     });
 
-                    var fileButton = item.file_path ?
-                        `<button type="button" class="btn btn-sm btn-primary view-image-btn" data-file-path="gambar/${item.file_path}"><i class="fa fa-eye"></i></button>` :
-                        '';
+                    var fileButton = '';
+                    if (item.file_path) {
+                        fileButton = `<button type="button" class="btn btn-sm btn-primary view-image-btn" data-file-path="gambar/${item.file_path}"><i class="fa fa-eye"></i></button>`;
+                    } else {
+                        fileButton = `<button type="button" class="btn btn-sm btn-primary view-image-btn" data-file-path="gambar/default.jpg"><i class="fa fa-eye"></i></button>`;
+                    }
+
 
                     var notificationItem = `
                         <li>
@@ -135,85 +135,6 @@ $pegawai_id = isset($_GET['pegawai_id']) ? $_GET['pegawai_id'] : 0;
         });
     });
 </script>
-
-<!-- histori hirarki end -->
-
-
-<!-- histori table  -->
-
-<!-- <div class="card">
-    <div class="card-body">
-        <table id="historiGajiTable" class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Periode</th>
-                    <th>Gaji Pokok</th>
-                    <th>Tunjangan</th>
-                    <th>Potongan</th>
-                    <th>Bonus</th>
-                    <th>Total Gaji</th>
-                    <th>Tanggal Pembayaran</th>
-                    <th>Metode Pembayaran</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div> -->
-
-<!-- <script>
-    $(document).ready(function () {
-        var pegawai_id = '<?php echo $pegawai_id; ?>';
-        $.ajax({
-            url: 'controller/fetch_histori_gaji.php',
-            type: 'GET',
-            data: {
-                pegawai_id: pegawai_id
-            },
-            success: function (response) {
-                var data = JSON.parse(response);
-                $('#namaPegawai').text(data.namaPegawai);
-                $('#historiGajiTable').DataTable({
-                    "responsive": true,
-                    "data": data.data,
-                    "columns": [{
-                            "data": "No"
-                        },
-                        {
-                            "data": "periode_pembayaran"
-                        },
-                        {
-                            "data": "gaji_pokok"
-                        },
-                        {
-                            "data": "tunjangan"
-                        },
-                        {
-                            "data": "potongan"
-                        },
-                        {
-                            "data": "bonus"
-                        },
-                        {
-                            "data": "total_gaji"
-                        },
-                        {
-                            "data": "tanggal_pembayaran"
-                        },
-                        {
-                            "data": "metode_pembayaran"
-                        }
-                    ]
-                });
-            }
-        });
-    });
-</script> -->
-
-<!-- histori table end  -->
-
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -78,7 +78,8 @@ $sql = "SELECT
         FROM gaji_pegawai
         JOIN pegawai ON gaji_pegawai.pegawai_id = pegawai.id
         LEFT JOIN slip_gaji ON gaji_pegawai.id = slip_gaji.gaji_pegawai_id
-        WHERE gaji_pegawai.pegawai_id = ?";
+        WHERE gaji_pegawai.pegawai_id = ?
+        ORDER BY gaji_pegawai.id DESC"; ;
 
 $stmt = $koneksi->prepare($sql);
 $stmt->bind_param('i', $pegawai_id);

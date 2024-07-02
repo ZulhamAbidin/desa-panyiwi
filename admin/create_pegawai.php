@@ -9,6 +9,7 @@ $email = '';
 $nomor_telepon = '';
 $alamat = '';
 $periode_pembayaran = '';
+$file_path = '';
 $error_message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -19,6 +20,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nomor_telepon = $_POST['nomor_telepon'];
     $alamat = $_POST['alamat'];
     $periode_pembayaran = $_POST['periode_pembayaran'];
+
+    $uploadDir = __DIR__ . '/gambar/';
+    $file_path = '';
+
+    if ($_FILES['foto_pegawai']['size'] > 0) {
+        $fileName = basename($_FILES['foto_pegawai']['name']);
+        $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $randomFileName = uniqid() . '.' . $fileExtension;
+        $file_path = $randomFileName;
+        $targetPath = $uploadDir . $randomFileName;
+        if (move_uploaded_file($_FILES['foto_pegawai']['tmp_name'], $targetPath)) {
+        } else {
+            $_SESSION['error_message'] = "Gagal mengunggah foto pegawai.";
+            header("Location: create_gaji.php");
+            exit();
+        }
+    }
 
     $check_sql = "SELECT * FROM pegawai WHERE email='$email' OR nomor_identifikasi='$nomor_identifikasi'";
     $result = $koneksi->query($check_sql);
@@ -32,9 +50,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
     } else {
-        $sql = "INSERT INTO pegawai (nama, jabatan, nomor_identifikasi, email, nomor_telepon, alamat, periode_pembayaran) 
-                VALUES ('$nama', '$jabatan', '$nomor_identifikasi', '$email', '$nomor_telepon', '$alamat', '$periode_pembayaran')";
-
+        $sql = "INSERT INTO pegawai (nama, jabatan, nomor_identifikasi, email, nomor_telepon, alamat, periode_pembayaran, foto_pegawai) 
+                VALUES ('$nama', '$jabatan', '$nomor_identifikasi', '$email', '$nomor_telepon', '$alamat', '$periode_pembayaran', '$file_path')";
+        
         if ($koneksi->query($sql) === true) {
             $_SESSION['success_message'] = "Pegawai baru berhasil disimpan!";
             header("Location: list_pegawai.php");
@@ -51,40 +69,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div class="card">
     <div class="card-body">
-        <form method="POST" action="">
-            <div class="form-group">
-                <label for="nama">Nama:</label>
-                <input type="text" class="form-control" id="nama" name="nama" value="<?php echo htmlspecialchars($nama); ?>" required>
+        <form method="POST" action="" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-12 col-md-12">
+                    <label for="nama">Nama:</label>
+                    <input type="text" class="form-control" id="nama" name="nama" value="<?php echo htmlspecialchars($nama); ?>" required>
+                </div>
+                <div class="col-12 col-md-6 mt-2">
+                    <label for="jabatan">Jabatan:</label>
+                    <input type="text" class="form-control" id="jabatan" name="jabatan" value="<?php echo htmlspecialchars($jabatan); ?>" required>
+                </div>
+                <div class="col-12 col-md-6 mt-2">
+                    <label for="nomor_identifikasi">Nomor Identifikasi:</label>
+                    <input type="text" class="form-control" id="nomor_identifikasi" name="nomor_identifikasi" value="<?php echo htmlspecialchars($nomor_identifikasi); ?>" required>
+                </div>
+                <div class="col-12 col-md-6 mt-2">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+                </div>
+                <div class="col-12 col-md-6 mt-2">
+                    <label for="nomor_telepon">Nomor Telepon:</label>
+                    <input type="text" class="form-control" id="nomor_telepon" name="nomor_telepon" value="<?php echo htmlspecialchars($nomor_telepon); ?>">
+                </div>
+                <div class="col-12 col-md-6 mt-2">
+                    <label for="foto_pegawai">Pas Foto:</label>
+                    <input type="file" class="form-control" id="foto_pegawai" name="foto_pegawai">
+                </div>
+                <div class="col-12 col-md-6 mt-2">
+                    <label for="periode_pembayaran">Periode Pembayaran:</label>
+                    <select class="form-control" id="periode_pembayaran" name="periode_pembayaran" required>
+                        <option value="">Pilih Periode Pembayaran</option>
+                        <option value="bulanan" <?php echo ($periode_pembayaran == 'bulanan') ? 'selected' : ''; ?>>Bulanan</option>
+                        <option value="triwulanan" <?php echo ($periode_pembayaran == 'triwulanan') ? 'selected' : ''; ?>>Triwulanan</option>
+                        <option value="tahunan" <?php echo ($periode_pembayaran == 'tahunan') ? 'selected' : ''; ?>>Tahunan</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-12 mt-2">
+                    <label for="alamat">Alamat:</label>
+                    <textarea class="form-control" id="alamat" name="alamat"><?php echo htmlspecialchars($alamat); ?></textarea>
+                </div>
+                <div class="col-12 col-md-12 text-end mt-4">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="jabatan">Jabatan:</label>
-                <input type="text" class="form-control" id="jabatan" name="jabatan" value="<?php echo htmlspecialchars($jabatan); ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="nomor_identifikasi">Nomor Identifikasi:</label>
-                <input type="text" class="form-control" id="nomor_identifikasi" name="nomor_identifikasi" value="<?php echo htmlspecialchars($nomor_identifikasi); ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="nomor_telepon">Nomor Telepon:</label>
-                <input type="text" class="form-control" id="nomor_telepon" name="nomor_telepon" value="<?php echo htmlspecialchars($nomor_telepon); ?>">
-            </div>
-            <div class="form-group">
-                <label for="alamat">Alamat:</label>
-                <textarea class="form-control" id="alamat" name="alamat"><?php echo htmlspecialchars($alamat); ?></textarea>
-            </div>
-            <div class="form-group">
-                <label for="periode_pembayaran">Periode Pembayaran:</label>
-                <select class="form-control" id="periode_pembayaran" name="periode_pembayaran">
-                    <option value="bulanan" <?php if ($periode_pembayaran == 'bulanan') echo 'selected'; ?>>Bulanan</option>
-                    <option value="triwulanan" <?php if ($periode_pembayaran == 'triwulanan') echo 'selected'; ?>>Triwulanan</option>
-                    <!-- <option value="tahunan" <?php if ($periode_pembayaran == 'tahunan') echo 'selected'; ?>>Tahunan</option> -->
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
 </div>

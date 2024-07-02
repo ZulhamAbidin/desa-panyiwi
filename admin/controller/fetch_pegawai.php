@@ -12,6 +12,9 @@ if ($result && $result->num_rows > 0) {
         $actionColumn = '<a href="edit_pegawai.php?id=' . $row['id'] . '" class="btn btn-sm btn-primary" role="button">
                             <i class="fe fe-edit me-1"></i>Edit
                          </a> 
+                         <a href="detail_pegawai.php?id=' . $row['id'] . '" class="btn btn-sm btn-success" role="button">
+                            <i class="fe fe-eye me-1"></i>Detail
+                         </a>
                          <button class="btn btn-sm btn-danger delete-btn" data-id="' . $row['id'] . '" data-nama="' . htmlspecialchars($row['nama'], ENT_QUOTES) . '">
                             <i class="fe fe-trash me-1"></i>Delete
                          </button>';

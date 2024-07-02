@@ -80,13 +80,25 @@
                     const data = response.data;
                     console.log('Parsed Data:', data);
                     data.forEach(item => {
-                        const card = `
+                    let periodePembayaranText;
+                    switch (item.periode_pembayaran) {
+                        case 'bulanan':
+                            periodePembayaranText = 'Setiap Bulan';
+                            break;
+                        case 'triwulanan':
+                            periodePembayaranText = 'Setiap 3 Bulan';
+                            break;
+                        case 'tahunan':
+                            periodePembayaranText = 'Setiap Tahun';
+                            break;
+                    }
+                    const card = `
                     <div class="col-sm-6 col-xl-3 col-md-6 col-lg-4">
                         <div class="panel price panel-color bg-primary-transparent">
                             <div class="pb-4 px-5 border-bottom bg-white">
                                 <h4 class="align-middle text-center pt-6 fw-bold">"${item.nama}"</h4>
                                 <p class="pb-1 fs-12 align-middle text-center">"${item.jabatan}"</p>
-                                <p class="fs-12 text-center align-middle">dibayarkan setiap <span class="fw-bold">"${item.periode_pembayaran}"</span>, dengan no ponsel "${item.nomor_telepon}".</p>
+                                <p class="fs-12 text-center align-middle">dibayarkan setiap <span class="fw-bold">"${periodePembayaranText}"</span>, dengan no ponsel "${item.nomor_telepon}".</p>
                             </div>
                             <div class="panel-body p-0">
                                 <div class="text-center py-2 fw-bold text-primary align-middle fs-25">${item.total_gaji}</div>
