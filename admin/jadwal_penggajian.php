@@ -23,10 +23,10 @@
             const metodePembayaran = $(this).data('metode_pembayaran');
 
             Swal.fire({
-                title: 'Upload Bukti Pembayaran',
+                title: '<h4>Upload Bukti Pembayaran</h4>',
                 html: `
                     <form id="formPembayaran" enctype="multipart/form-data">
-                        <input type="file" id="uploadBuktiPembayaran" class="form-control-file" name="upload_gambar">
+                        <input type="file" id="uploadBuktiPembayaran" class="form-control form-control-sm form-control-file" name="upload_gambar">
                         <input type="hidden" name="pegawai_id" value="${pegawaiId}">
                         <input type="hidden" name="pembayaran_yang_akan_datang" value="${pembayaranYangAkanDatang}">
                         <input type="hidden" name="gaji_pokok" value="${gajiPokok}">
@@ -57,7 +57,9 @@
                                 text: 'Bukti pembayaran berhasil diunggah.',
                                 icon: 'success',
                                 confirmButtonText: 'OK'
-                            }).then(() => {});
+                            }).then(() => {
+                                location.reload();
+                            });
                         },
                         error: function (xhr, status, error) {
                             console.error('Error:', error);
@@ -70,6 +72,7 @@
                     });
                 }
             });
+
         });
 
         $.ajax({
