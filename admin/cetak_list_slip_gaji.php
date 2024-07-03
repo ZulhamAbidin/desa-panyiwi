@@ -85,6 +85,9 @@ $result_pegawai = $koneksi->query($sql_pegawai);
                 <div class="col-12 text-start">
                     <button type="button" id="submit-btn" class="btn btn-primary">Cetak Laporan Slip Gaji</button>
                     <a id="download-link" href="" target="_blank" class="btn btn-primary d-none">Unduh Laporan PDF</a>
+
+                    tampil ketika 
+                    <a id="download-link" href="" target="_blank" class="btn btn-primary d-none">Kirim Ke Email Pegawai</a>
                 </div>
             </div>
         </form>
@@ -96,58 +99,59 @@ $result_pegawai = $koneksi->query($sql_pegawai);
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-<script>
-    $("#submit-btn").click(function() {
-        var pegawai_id = $("#pegawai_id").val();
-        var start_date = $("#start_date").val();
-        var end_date = $("#end_date").val();
+<script>$("#submit-btn").click(function() {
+    var pegawai_id = $("#pegawai_id").val();
+    var start_date = $("#start_date").val();
+    var end_date = $("#end_date").val();
 
-        $("#submit-btn").addClass('loading').prop('disabled', true);
+    $("#submit-btn").addClass('loading').prop('disabled', true);
 
-        $.ajax({
-            type: "POST",
-            url: "controller/proses_export_slip_gaji.php",
-            data: {
-                pegawai_id: pegawai_id,
-                start_date: start_date,
-                end_date: end_date
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response.status === 'success') {
-                    $("#download-link").attr('href', response.url).removeClass('d-none');
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Sukses',
-                        text: 'PDF telah berhasil di-generate.',
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'OK'
-                    });
-                } else if (response.status === 'error') {
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Info',
-                        text: response.message,
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
+    $.ajax({
+        type: "POST",
+        url: "controller/proses_export_slip_gaji.php",
+        data: {
+            pegawai_id: pegawai_id,
+            start_date: start_date,
+            end_date: end_date
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                $("#download-link").attr('href', response.url).removeClass('d-none');
+                $("#xxx").attr('href', response.url).removeClass('d-none');
                 Swal.fire({
-                    icon: 'info',
-                    title: 'Info',
-                    text: 'Terjadi kesalahan saat memproses permintaan.',
+                    icon: 'success',
+                    title: 'Sukses',
+                    text: response.message,
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'OK'
                 });
-            },
-            complete: function() {
-                $("#submit-btn").removeClass('loading').prop('disabled', false);
+            } else if (response.status === 'error') {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Info',
+                    text: response.message,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
             }
-        });
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+            Swal.fire({
+                icon: 'info',
+                title: 'Info',
+                text: 'Terjadi kesalahan saat memproses permintaan.',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            });
+        },
+        complete: function() {
+            $("#submit-btn").removeClass('loading').prop('disabled', false);
+        }
     });
+});
+
 </script>
 
 <?php include 'src/footer.php'; ?>

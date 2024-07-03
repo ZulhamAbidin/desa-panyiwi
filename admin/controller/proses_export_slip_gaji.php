@@ -2,6 +2,8 @@
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 require_once '../../vendor/autoload.php';
 include '../../koneksi.php';
@@ -15,7 +17,7 @@ try {
     $start_date = $_POST['start_date'];
     $end_date = $_POST['end_date'];
 
-    $sql_pegawai = "SELECT nama FROM pegawai WHERE id = ?";
+    $sql_pegawai = "SELECT nama, email FROM pegawai WHERE id = ?";
     $stmt_pegawai = $koneksi->prepare($sql_pegawai);
     $stmt_pegawai->bind_param("i", $pegawai_id);
     $stmt_pegawai->execute();
@@ -27,6 +29,7 @@ try {
 
     $row_pegawai = $result_pegawai->fetch_assoc();
     $nama_pegawai = $row_pegawai['nama'];
+    $email_pegawai = $row_pegawai['email'];
 
     $sql_slip_gaji = "SELECT sp.id AS slip_gaji_id, p.nama AS nama_pegawai, sp.file_path, gp.periode, gp.gaji_pokok, gp.tunjangan, gp.potongan, gp.bonus, gp.total_gaji
         FROM slip_gaji sp
@@ -92,7 +95,6 @@ try {
                     <td><img src="' . $image_base64 . '" alt="Gambar Slip Gaji"></td>
                 </tr>';
 
-        // Set slip_gaji_id dari hasil query
         $slip_gaji_id = $row['slip_gaji_id'];
     }
 
@@ -109,25 +111,47 @@ try {
 
     $download_url = 'http://' . $_SERVER['HTTP_HOST'] . '/keuangan/admin/export_pdf/' . $file_name;
 
-    // Insert record into the document table
     $sql_document = "INSERT INTO document (file_path, slip_gaji_id) VALUES (?, ?)";
     $stmt_document = $koneksi->prepare($sql_document);
     $stmt_document->bind_param("si", $file_name, $slip_gaji_id);
     $stmt_document->execute();
 
-    echo json_encode(array('status' => 'success', 'url' => $download_url));
+    $mail = new PHPMailer(true);
+
+    try {
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'sikudes.panyiwi@gmail.com';
+        $mail->Password = 'xwpf npne ksnd gbcd';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+
+        $mail->setFrom('sikudes.panyiwi@gmail.com', 'Admin Kantor Desa Panyili');
+        $mail->addAddress($email_pegawai, $nama_pegawai);
+
+        $mail->isHTML(true);
+        $mail->Subject = 'Slip Gaji Periode ' . $start_date . ' - ' . $end_date;
+        $mail->Body    = 'Berikut terlampir slip gaji Anda untuk periode ' . $start_date . ' sampai ' . $end_date . '.';
+        $mail->addAttachment($output_file);
+
+        $mail->send();
+    } catch (Exception $e) {
+        throw new Exception("Pesan tidak dapat dikirim. Mailer Error: {$mail->ErrorInfo}");
+    }
+
+    $response = array(
+        'status' => 'success',
+        'message' => 'PDF berhasil di-generate dan email telah dikirim.',
+        'url' => $download_url
+    );
+
+    echo json_encode($response);
 } catch (Exception $e) {
-    echo json_encode(array('status' => 'error', 'message' => $e->getMessage()));
-} finally {
-    if (isset($stmt_pegawai)) {
-        $stmt_pegawai->close();
-    }
-    if (isset($stmt_slip_gaji)) {
-        $stmt_slip_gaji->close();
-    }
-    if (isset($stmt_document)) {
-        $stmt_document->close();
-    }
-    $koneksi->close();
+    $response = array(
+        'status' => 'error',
+        'message' => $e->getMessage()
+    );
+    echo json_encode($response);
 }
 ?>
