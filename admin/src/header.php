@@ -192,7 +192,8 @@ $dt     = mysqli_fetch_array($ambil);
                                     <li><a href="create_gaji.php" class="slide-item">Tambah Data Penggajian</a></li>
                                     <li><a href="list_settingan.php" class="slide-item"> List Komponen Penggajian</a></li>
                                     <li><a href="create_settingan.php" class="slide-item"> Tambah Komponen Penggajian</a></li>
-                                    <li><a href="cetak_list_slip_gaji.php" class="slide-item"> Cetak Slip Gaji Penggajian</a></li>
+                                    <li><a href="cetak_list_slip_gaji.php" class="slide-item"> Distribusi Slip Gaji</a></li>
+                                    <li><a href="analisis_pengeluaran.php" class="slide-item"> Analisis Pengeluaran</a></li>
                                 </ul>
                             </li>
 

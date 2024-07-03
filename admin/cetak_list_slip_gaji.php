@@ -21,7 +21,7 @@ if (isset($_SESSION['success_message'])) {
 include 'src/header.php';
 include '../koneksi.php';
 
-$sql_pegawai = "SELECT id, nama FROM pegawai";
+$sql_pegawai = "SELECT id, nama, email FROM pegawai";
 $result_pegawai = $koneksi->query($sql_pegawai);
 ?>
 
@@ -69,7 +69,7 @@ $result_pegawai = $koneksi->query($sql_pegawai);
                         <option value="" disabled selected>Pilih Pegawai</option>
                         <?php
                         while ($row = $result_pegawai->fetch_assoc()) {
-                            echo '<option value="' . $row['id'] . '">' . $row['nama'] . '</option>';
+                            echo '<option value="' . $row['id'] . '" data-email="' . $row['email'] . '">' . $row['nama'] . '</option>';
                         }
                         ?>
                     </select>
@@ -83,11 +83,8 @@ $result_pegawai = $koneksi->query($sql_pegawai);
                     <input type="date" class="form-control" id="end_date" name="end_date" required>
                 </div>
                 <div class="col-12 text-start">
-                    <button type="button" id="submit-btn" class="btn btn-primary">Cetak Laporan Slip Gaji</button>
-                    <a id="download-link" href="" target="_blank" class="btn btn-primary d-none">Unduh Laporan PDF</a>
-
-                    tampil ketika 
-                    <a id="download-link" href="" target="_blank" class="btn btn-primary d-none">Kirim Ke Email Pegawai</a>
+                    <button type="button" id="submit-btn" class="btn btn-primary">Distribusikan Slip Gaji <span id="pegawai-info"></span></button>
+                    <a id="download-link" href="" target="_blank" class="btn btn-primary d-none">Lihat Dokumen Yang Dikirim</a>
                 </div>
             </div>
         </form>
@@ -99,10 +96,21 @@ $result_pegawai = $koneksi->query($sql_pegawai);
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-<script>$("#submit-btn").click(function() {
+<script>
+$("#pegawai_id").change(function() {
+    var selectedOption = $(this).find(':selected');
+    var namaPegawai = selectedOption.text();
+    var emailPegawai = selectedOption.data('email');
+    $("#submit-btn").html('Distribusikan Slip Gaji <span id="pegawai-info">ke ' + namaPegawai + ' dengan alamat email ' + emailPegawai + '</span>');
+});
+
+
+$("#submit-btn").click(function() {
     var pegawai_id = $("#pegawai_id").val();
     var start_date = $("#start_date").val();
     var end_date = $("#end_date").val();
+    var pegawai_email = $("#pegawai_id").find(':selected').data('email');
+    var pegawai_name = $("#pegawai_id").find(':selected').text(); // Mendapatkan nama pegawai
 
     $("#submit-btn").addClass('loading').prop('disabled', true);
 
@@ -112,13 +120,13 @@ $result_pegawai = $koneksi->query($sql_pegawai);
         data: {
             pegawai_id: pegawai_id,
             start_date: start_date,
-            end_date: end_date
+            end_date: end_date,
+            pegawai_email: pegawai_email // Mengirimkan email pegawai ke proses_export_slip_gaji.php
         },
         dataType: 'json',
         success: function(response) {
             if (response.status === 'success') {
                 $("#download-link").attr('href', response.url).removeClass('d-none');
-                $("#xxx").attr('href', response.url).removeClass('d-none');
                 Swal.fire({
                     icon: 'success',
                     title: 'Sukses',
@@ -151,7 +159,6 @@ $result_pegawai = $koneksi->query($sql_pegawai);
         }
     });
 });
-
 </script>
 
 <?php include 'src/footer.php'; ?>
