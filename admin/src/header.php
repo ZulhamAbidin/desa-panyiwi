@@ -181,7 +181,6 @@ $dt     = mysqli_fetch_array($ambil);
                                 <h3>Pengelolaan Keuangan</h3>
                             </li>
 
-
                             <li class="slide">
                                 <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i
                                         class="side-menu__icon fe fe-slack"></i><span
@@ -191,10 +190,9 @@ $dt     = mysqli_fetch_array($ambil);
                                     <li><a href="jadwal_penggajian.php" class="slide-item">Jadwal Penggajian</a></li>
                                     <li><a href="list_gaji.php" class="slide-item">List Data dan Histori Penggajian</a></li>
                                     <li><a href="create_gaji.php" class="slide-item">Tambah Data Penggajian</a></li>
-                                    <li><a href="list_settingan.php" class="slide-item"> List Komponen Penggajian</a>
-                                    </li>
-                                    <li><a href="create_settingan.php" class="slide-item"> Tambah Komponen
-                                            Penggajian</a></li>
+                                    <li><a href="list_settingan.php" class="slide-item"> List Komponen Penggajian</a></li>
+                                    <li><a href="create_settingan.php" class="slide-item"> Tambah Komponen Penggajian</a></li>
+                                    <li><a href="cetak_list_slip_gaji.php" class="slide-item"> Cetak Slip Gaji Penggajian</a></li>
                                 </ul>
                             </li>
 
