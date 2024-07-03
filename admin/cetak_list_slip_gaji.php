@@ -25,6 +25,36 @@ $sql_pegawai = "SELECT id, nama FROM pegawai";
 $result_pegawai = $koneksi->query($sql_pegawai);
 ?>
 
+<style>
+    #submit-btn.loading {
+        position: relative;
+    }
+
+    #submit-btn.loading:before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 16px;
+        height: 16px;
+        margin: -8px 0 0 -8px;
+        border: 2px solid #fff;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+
 <div class="page-header">
     <h1 class="page-title">Cetak Slip Gaji</h1>
 </div>
@@ -66,12 +96,13 @@ $result_pegawai = $koneksi->query($sql_pegawai);
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-
 <script>
     $("#submit-btn").click(function() {
         var pegawai_id = $("#pegawai_id").val();
         var start_date = $("#start_date").val();
         var end_date = $("#end_date").val();
+
+        $("#submit-btn").addClass('loading').prop('disabled', true);
 
         $.ajax({
             type: "POST",
@@ -95,7 +126,7 @@ $result_pegawai = $koneksi->query($sql_pegawai);
                 } else if (response.status === 'error') {
                     Swal.fire({
                         icon: 'info',
-                        title: 'info',
+                        title: 'Info',
                         text: response.message,
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'OK'
@@ -106,11 +137,14 @@ $result_pegawai = $koneksi->query($sql_pegawai);
                 console.error(xhr.responseText);
                 Swal.fire({
                     icon: 'info',
-                    title: 'info',
+                    title: 'Info',
                     text: 'Terjadi kesalahan saat memproses permintaan.',
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'OK'
                 });
+            },
+            complete: function() {
+                $("#submit-btn").removeClass('loading').prop('disabled', false);
             }
         });
     });
