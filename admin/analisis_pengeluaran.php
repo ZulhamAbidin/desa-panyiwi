@@ -1,4 +1,12 @@
 <?php include 'src/header.php'; ?>
+
+<style>
+    #tabelGajiPegawai {
+        display: none;
+    }
+</style>
+
+
 <div class="container">
     <div class="page-header">
         <h1 class="page-title">Analisis Pengeluaran Gaji Pegawai</h1>
@@ -52,6 +60,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
 <script>
     $(document).ready(function () {
         $('#formRentangWaktu').submit(function (event) {
@@ -124,6 +133,8 @@
                             style: 'currency',
                             currency: 'IDR'
                         }).format(totalGajiKeseluruhan));
+
+                    $('#tabelGajiPegawai').css('display', 'table');
                 },
                 error: function (xhr, status, error) {
                     console.error('Error:', error);
@@ -131,7 +142,7 @@
                         icon: 'error',
                         title: 'Oops...',
                         text: 'Terjadi kesalahan saat memproses permintaan: ' +
-                            error, // Menampilkan pesan error dari server jika tersedia
+                            error,
                     });
                 }
 
@@ -149,4 +160,7 @@
         }
     });
 </script>
+
+
+
 <?php include 'src/footer.php'; ?>

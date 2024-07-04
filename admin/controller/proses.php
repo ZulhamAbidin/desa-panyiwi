@@ -19,7 +19,7 @@ if (isset($_POST['tanggal_mulai'], $_POST['tanggal_akhir'])) {
     $result = $koneksi->query($sql);
 
     if ($result->num_rows > 0) {
-        $data = []; // Array untuk menyimpan data pegawai dan total gaji
+        $data = [];
         $total_gaji_keseluruhan = 0;
 
         while ($row = $result->fetch_assoc()) {
@@ -50,7 +50,6 @@ if (isset($_POST['tanggal_mulai'], $_POST['tanggal_akhir'])) {
                 }
             }
 
-            // Menyimpan data pegawai dan total gaji ke dalam array
             $data[] = [
                 'nama' => $row['nama'],
                 'jabatan' => $row['jabatan'],
@@ -61,7 +60,6 @@ if (isset($_POST['tanggal_mulai'], $_POST['tanggal_akhir'])) {
             $total_gaji_keseluruhan += $total_gaji;
         }
 
-        // Mengonversi data ke format JSON
         $response = [
             'data' => $data,
             'total_gaji_keseluruhan' => $total_gaji_keseluruhan,
