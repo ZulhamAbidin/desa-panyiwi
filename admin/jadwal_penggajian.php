@@ -10,6 +10,13 @@
 </div>
 
 <script>
+    // Fungsi helper untuk format tanggal
+function formatTanggalIndonesia(dateString) {
+    var options = { day: 'numeric', month: 'long', year: 'numeric' };
+    var tanggal = new Date(dateString);
+    return tanggal.toLocaleDateString('id-ID', options);
+}
+
     $(document).ready(function () {
         $('#card-container').on('click', '.bayar-sekarang', function () {
             const pegawaiId = $(this).data('pegawai_id');
@@ -133,9 +140,9 @@
                                             <i class="mdi mdi-circle-outline text-primary p-2 fs-11 text-center align-middle"></i><strong class="fw-12"> Bonus </strong> ${item.bonus}
                                         </li>
                                     </ul>
-                                    <div class="pb-4 px-5 border-top pt-4 fw-semibold">
-                                        <p class="text-center align-middle">Tanggal Terakhir Kali Gaji Dibayarkan ${item.tanggal_pembayaran}</p>
-                                        <p class="text-center align-middle">Gaji Berikutnya ${item.pembayaran_yang_akan_datang}</p>
+                                     <div class="pb-4 px-5 border-top pt-4 fw-semibold">
+                                        <p class="text-center align-middle">Tanggal Terakhir Kali Gaji Dibayarkan <br>  ${formatTanggalIndonesia(item.tanggal_pembayaran)}</p>
+                                        <p class="text-center align-middle">Gaji Berikutnya <br> ${formatTanggalIndonesia(item.pembayaran_yang_akan_datang)}</p>
                                     </div>
                                 </div>
                             </div>`;

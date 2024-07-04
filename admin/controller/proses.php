@@ -25,11 +25,10 @@ if (isset($_POST['tanggal_mulai'], $_POST['tanggal_akhir'])) {
             $periode_terakhir = $row['periode_pembayaran'];
     
             if (!$row['tanggal_terakhir_pembayaran']) {
-                $tanggal_mulai = $_POST['tanggal_mulai'];
                 $periode_terakhir = 'belum_dibayar';
             }
     
-            if ($row['tanggal_terakhir_pembayaran'] || $periode_terakhir === 'belum_dibayar') {
+            if ($row['tanggal_terakhir_pembayaran'] && $row['tanggal_terakhir_pembayaran'] >= $tanggal_mulai) {
                 switch ($periode_terakhir) {
                     case 'bulanan':
                         $total_gaji = hitungTotalGajiBulanan($koneksi, $row['id'], $tanggal_mulai, $tanggal_akhir, $row['gaji_pokok']);
@@ -57,7 +56,6 @@ if (isset($_POST['tanggal_mulai'], $_POST['tanggal_akhir'])) {
     } else {
         echo "Tidak ada data pegawai.";
     }
-    
     
 } else {
     echo "Tanggal mulai dan tanggal akhir tidak ditemukan dalam data POST.";
@@ -164,4 +162,5 @@ function hitungTotalGajiTahunan($koneksi, $pegawai_id, $tanggal_mulai, $tanggal_
 $koneksi->close();
 ?>
 
-<!-- jaNGAN KACAU -->
+
+<!-- JANGAN KACCAULAH -->
