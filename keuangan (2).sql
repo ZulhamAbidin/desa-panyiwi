@@ -60,6 +60,23 @@ INSERT INTO `gaji_otomatis` (`id`, `pegawai_id`, `gaji_pokok`, `tunjangan`, `bon
 (70, 39, '1000000', '1000000', '1000000', '2000000'),
 (71, 40, '1000000', '1000000', '1000000', '2000000');
 
+
+
+Tanggal Mulai:
+
+04/07/2024
+Tanggal Akhir:
+
+04/07/2026
+Annisa Septiani Kamal: Rp 69.000.000
+AstriAyuningsih: Rp 72.000.000
+Muflih AlGhifari Salam: Rp 72.000.000
+Zulham Abidin: Rp 0
+Andri Apriadi: Rp 21.000.000
+Zulham Abidin, S.Pd., Gr.: Rp 0
+
+Total Gaji Keseluruhan: Rp 234.000.000
+
 -- --------------------------------------------------------
 
 --
