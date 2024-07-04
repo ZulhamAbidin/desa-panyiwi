@@ -13,6 +13,10 @@ try {
         throw new Exception('Invalid request method.');
     }
 
+    function formatRupiah($angka) {
+        return 'Rp ' . number_format($angka, 0, ',', '.');
+    }    
+
     $pegawai_id = $_POST['pegawai_id'];
     $start_date = $_POST['start_date'];
     $end_date = $_POST['end_date'];
@@ -83,15 +87,16 @@ try {
         $image_path = 'C:/laragon/www/keuangan/admin/gambar/' . $row['file_path'];
         $image_data = file_get_contents($image_path);
         $image_base64 = 'data:image/png;base64,' . base64_encode($image_data);
+        $formatted_periode = date('j F Y', strtotime($row['periode']));
 
         $html .= '<tr>
                     <td>' . htmlspecialchars($row['nama_pegawai']) . '</td>
-                    <td>' . htmlspecialchars($row['periode']) . '</td>
-                    <td>' . htmlspecialchars($row['gaji_pokok']) . '</td>
-                    <td>' . htmlspecialchars($row['tunjangan']) . '</td>
-                    <td>' . htmlspecialchars($row['potongan']) . '</td>
-                    <td>' . htmlspecialchars($row['bonus']) . '</td>
-                    <td>' . htmlspecialchars($row['total_gaji']) . '</td>
+                    <td>' . htmlspecialchars($formatted_periode) . '</td>
+                    <td>' . formatRupiah($row['gaji_pokok']) . '</td>
+                    <td>' . formatRupiah($row['tunjangan']) . '</td>
+                    <td>' . formatRupiah($row['potongan']) . '</td>
+                    <td>' . formatRupiah($row['bonus']) . '</td>
+                    <td>' . formatRupiah($row['total_gaji']) . '</td>
                     <td><img src="' . $image_base64 . '" alt="Gambar Slip Gaji"></td>
                 </tr>';
 
