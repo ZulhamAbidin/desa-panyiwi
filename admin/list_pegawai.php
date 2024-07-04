@@ -130,108 +130,104 @@ if (isset($_SESSION['error_message'])) {
         });
 
         $('#pegawaiTable').on('click', '.delete-btn', function () {
-    var id = $(this).data('id');
-    var nama = $(this).data('nama');
+            var id = $(this).data('id');
+            var nama = $(this).data('nama');
 
-    function deletePegawai(id) {
-        $.ajax({
-            type: 'POST',
-            url: 'controller/delete_pegawai.php',
-            data: {
-                id: id,
-                forceDelete: true
-            },
-            dataType: 'json',
-            success: function (response) {
-                if (response.status === 'success') {
-                    table.ajax.reload();
-                    Swal.fire(
-                        'Terhapus!',
-                        'Data berhasil dihapus.',
-                        'success'
-                    );
-                } else {
+            function deletePegawai(id) {
+                $.ajax({
+                    type: 'POST',
+                    url: 'controller/delete_pegawai.php',
+                    data: {
+                        id: id,
+                        forceDelete: true
+                    },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            table.ajax.reload();
+                            Swal.fire(
+                                'Terhapus!',
+                                'Data berhasil dihapus.',
+                                'success'
+                            );
+                        } else {
+                            Swal.fire(
+                                'Gagal!',
+                                response.message,
+                                'error'
+                            );
+                        }
+                    },
+                    error: function () {
+                        Swal.fire(
+                            'Gagal!',
+                            'Terjadi kesalahan saat menghubungi server.',
+                            'error'
+                        );
+                    }
+                });
+            }
+
+            // Pertama, periksa apakah pegawai memiliki data terkait
+            $.ajax({
+                type: 'POST',
+                url: 'controller/delete_pegawai.php',
+                data: {
+                    id: id
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 'has_gaji_data') {
+                        Swal.fire({
+                            title: 'Data Pegawai Memiliki Data Gaji',
+                            html: 'Data pegawai <strong>' + nama +
+                                '</strong> memiliki data di tabel gaji. Apakah Anda yakin ingin menghapus?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'Hapus',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                deletePegawai(id);
+                            }
+                        });
+                    } else if (response.status === 'no_gaji_data') {
+                        Swal.fire({
+                            title: 'Apakah Anda yakin?',
+                            text: "Anda akan menghapus data: " + nama,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'Hapus',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                deletePegawai(id);
+                            }
+                        });
+                    } else {
+                        Swal.fire(
+                            'Gagal!',
+                            response.message,
+                            'error'
+                        );
+                    }
+                },
+                error: function () {
                     Swal.fire(
                         'Gagal!',
-                        response.message,
+                        'Terjadi kesalahan saat menghubungi server.',
                         'error'
                     );
                 }
-            },
-            error: function () {
-                Swal.fire(
-                    'Gagal!',
-                    'Terjadi kesalahan saat menghubungi server.',
-                    'error'
-                );
-            }
+            });
         });
-    }
-
-    // Pertama, periksa apakah pegawai memiliki data terkait
-    $.ajax({
-        type: 'POST',
-        url: 'controller/delete_pegawai.php',
-        data: {
-            id: id
-        },
-        dataType: 'json',
-        success: function (response) {
-            if (response.status === 'has_gaji_data') {
-                Swal.fire({
-                    title: 'Data Pegawai Memiliki Data Gaji',
-                    html: 'Data pegawai <strong>' + nama +
-                        '</strong> memiliki data di tabel gaji. Apakah Anda yakin ingin menghapus?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Hapus',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        deletePegawai(id);
-                    }
-                });
-            } else if (response.status === 'no_gaji_data') {
-                Swal.fire({
-                    title: 'Apakah Anda yakin?',
-                    text: "Anda akan menghapus data: " + nama,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Hapus',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        deletePegawai(id);
-                    }
-                });
-            } else {
-                Swal.fire(
-                    'Gagal!',
-                    response.message,
-                    'error'
-                );
-            }
-        },
-        error: function () {
-            Swal.fire(
-                'Gagal!',
-                'Terjadi kesalahan saat menghubungi server.',
-                'error'
-            );
-        }
-    });
-});
-
-
 
     });
 </script>
-
-
 
 
 <?php include 'src/footer.php'; ?>

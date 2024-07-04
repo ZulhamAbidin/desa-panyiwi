@@ -9,6 +9,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
 
     try {
         if ($forceDelete) {
+             // Hapus data terkait di tabel export_laporan_penggajian
+             $sql_delete_export = "DELETE FROM export_laporan_penggajian WHERE pegawai_id = ?";
+             $stmt_export = $koneksi->prepare($sql_delete_export);
+             $stmt_export->bind_param("i", $id);
+             $stmt_export->execute();
+
+             $stmt_export->close(); // Hapus data terkait di tabel export_laporan_penggajian
+             $sql_delete_export = "DELETE FROM export_laporan_penggajian WHERE pegawai_id = ?";
+             $stmt_export = $koneksi->prepare($sql_delete_export);
+             $stmt_export->bind_param("i", $id);
+             $stmt_export->execute();
+             $stmt_export->close();
+
             // Hapus data terkait di tabel histori_gaji
             $sql_delete_histori = "DELETE FROM histori_gaji WHERE gaji_pegawai_id IN (SELECT id FROM gaji_pegawai WHERE pegawai_id = ?)";
             $stmt_histori = $koneksi->prepare($sql_delete_histori);

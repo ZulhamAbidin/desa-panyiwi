@@ -71,11 +71,7 @@ try {
         $html .= '</head><body>';
 
         // Header
-        $html .= '<div class="header">';
-        $html .= '<img src="path-to-your-logo/logo.png" alt="Logo">';
-        $html .= '<div class="alamat-instansi">Alamat Instansi</div>';
-        $html .= '<div class="teks-h5">Teks H5</div>';
-        $html .= '</div>';
+        
 
         $html .= '<h2>Laporan Slip Gaji - ' . htmlspecialchars($nama_pegawai) . '</h2><br>';
         $html .= '<table>

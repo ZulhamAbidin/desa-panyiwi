@@ -57,7 +57,7 @@ $pegawais = $result->fetch_all(MYSQLI_ASSOC);
 <div class="card">
     <div class="card-body">
         <div class="mb-5 text-center fw-bold"> Cetak Berdasarkan Periode Pembayaran</div>
-        <form action="controller/proses_cetak_laporan_penggajian_periode_pembayaran.php" method="post"
+        <form action="controller/proses_cetak_periode_pembayaran.php" method="post"
             id="cetak-laporan-periode-form">
             <div class="row">
                 <div class="col-12">
@@ -94,6 +94,68 @@ $pegawais = $result->fetch_all(MYSQLI_ASSOC);
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(document).ready(function () {
+    $('#pegawai-select').select2();
+
+    $('#cetak-laporan-form').submit(function (event) {
+        event.preventDefault();
+
+        var start_date = $('#start_date').val();
+        var end_date = $('#end_date').val();
+        var selected_pegawais = $('#pegawai-select').val();
+
+        var selected_pegawai_ids = selected_pegawais.join(',');
+
+        $.ajax({
+            url: 'controller/proses_cetak_laporan_penggajian.php',
+            method: 'GET',
+            data: {
+                selected_pegawai_ids: selected_pegawai_ids,
+                start_date: start_date,
+                end_date: end_date
+            },
+            success: function (response) {
+                var data = JSON.parse(response);
+                if (data.status === 'success') {
+                    $('#download-buttons-list').empty();
+                    data.files.forEach(file => {
+                        const fileName = file.split('/').pop();
+                        const displayName = fileName.split('-').slice(2, -1).join(' ');
+                        const downloadButton = 
+                            `<a href="/keuangan/admin/export_pdf/${fileName}" class="btn btn-primary me-2 mt-2">Download Hasil Export ${displayName}</a>`;
+                        $('#download-buttons-list').append(downloadButton);
+                    });
+
+                    $('#download-buttons').show();
+                    Swal.fire({
+                        title: 'PDF berhasil di-generate',
+                        text: 'Silakan unduh file di atas.',
+                        icon: 'success'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: data.message,
+                        icon: 'error'
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Terjadi kesalahan saat memproses data.',
+                    icon: 'error'
+                });
+            }
+        });
+    });
+});
+
+</script>
+
+
 <script>
     $(document).ready(function () {
         $('#pegawai-select').select2();
