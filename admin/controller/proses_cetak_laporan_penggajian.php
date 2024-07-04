@@ -113,16 +113,13 @@ try {
         $output_file = $_SERVER['DOCUMENT_ROOT'] . '/keuangan/admin/export_pdf/' . $file_name;
         file_put_contents($output_file, $dompdf->output());
 
-        // Hanya nama file untuk disimpan ke dalam database
-        $file_name_only = basename($output_file);
-
-        // Simpan informasi ke tabel export_laporan_penggajian
+        // Simpan ke database
         $sql_insert = "INSERT INTO export_laporan_penggajian (pegawai_id, file_path) VALUES (?, ?)";
         $stmt_insert = $koneksi->prepare($sql_insert);
-        $stmt_insert->bind_param("is", $pegawai_id, $file_name_only);
+        $stmt_insert->bind_param("is", $pegawai_id, $file_name);
         $stmt_insert->execute();
 
-        $generated_files[] = $output_file;
+        $generated_files[] = $file_name;
     }
 
     $response = array(

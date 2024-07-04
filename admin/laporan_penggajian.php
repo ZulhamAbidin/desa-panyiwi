@@ -9,7 +9,6 @@ if ($koneksi->connect_error) {
 $query = 'SELECT id, nama FROM pegawai';
 $result = $koneksi->query($query);
 $pegawais = $result->fetch_all(MYSQLI_ASSOC);
-
 ?>
 
 <div class="page-header">
@@ -27,9 +26,11 @@ $pegawais = $result->fetch_all(MYSQLI_ASSOC);
                         <?php foreach ($pegawais as $pegawai) : ?>
                         <div class="col-auto">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="pegawai_<?php echo $pegawai['id']; ?>"
-                                    name="selected_pegawais[]" value="<?php echo $pegawai['id']; ?>">
-                                <label class="form-check-label" for="pegawai_<?php echo $pegawai['id']; ?>"><?php echo htmlspecialchars($pegawai['nama']); ?></label>
+                                <input class="form-check-input" type="checkbox"
+                                    id="pegawai_<?php echo $pegawai['id']; ?>" name="selected_pegawais[]"
+                                    value="<?php echo $pegawai['id']; ?>">
+                                <label class="form-check-label"
+                                    for="pegawai_<?php echo $pegawai['id']; ?>"><?php echo htmlspecialchars($pegawai['nama']); ?></label>
                             </div>
                         </div>
                         <?php endforeach; ?>
@@ -48,27 +49,76 @@ $pegawais = $result->fetch_all(MYSQLI_ASSOC);
                 </div>
             </div>
         </form>
+
+        <div id="download-buttons" class="mt-4 text-center">
+            <div id="download-buttons-list" class="d-flex flex-wrap justify-content-center align-items-center"></div>
+            <small class="text-center text-primary">Anda Dapat Melihat Histori Export</small>
+        </div>
+
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    $(document).ready(function() {
-        $('#cetak-laporan-form').submit(function(event) {
+    $(document).ready(function () {
+        $('#cetak-laporan-form').submit(function (event) {
             event.preventDefault();
 
             var start_date = $('#start_date').val();
             var end_date = $('#end_date').val();
             var selected_pegawais = [];
 
-            $('input[name="selected_pegawais[]"]:checked').each(function() {
+            $('input[name="selected_pegawais[]"]:checked').each(function () {
                 selected_pegawais.push($(this).val());
             });
 
             var selected_pegawai_ids = selected_pegawais.join(',');
 
-            window.location.href = 'controller/proses_cetak_laporan_penggajian.php?selected_pegawai_ids=' + selected_pegawai_ids + '&start_date=' + start_date + '&end_date=' + end_date;
+            $.ajax({
+                url: 'controller/proses_cetak_laporan_penggajian.php',
+                method: 'GET',
+                data: {
+                    selected_pegawai_ids: selected_pegawai_ids,
+                    start_date: start_date,
+                    end_date: end_date
+                },
+                success: function (response) {
+                    var data = JSON.parse(response);
+                    if (data.status === 'success') {
+                        $('#download-buttons-list').empty();
+                        data.files.forEach(file => {
+                            const fileName = file.split('/').pop();
+                            const displayName = fileName.split('-').slice(2, -1)
+                                .join(' ');
+                            const downloadButton =
+                                `<a href="/keuangan/admin/export_pdf/${fileName}" class="btn btn-primary me-2 mt-2">Download Hasil Export ${displayName}</a>`;
+                            $('#download-buttons-list').append(downloadButton);
+                        });
+
+                        $('#download-buttons').show();
+                        Swal.fire({
+                            title: 'PDF berhasil di-generate',
+                            text: 'Silakan unduh file di atas.',
+                            icon: 'success'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: data.message,
+                            icon: 'error'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Terjadi kesalahan saat memproses data.',
+                        icon: 'error'
+                    });
+                }
+            });
         });
     });
 </script>
+
 <?php include 'src/footer.php'; ?>
