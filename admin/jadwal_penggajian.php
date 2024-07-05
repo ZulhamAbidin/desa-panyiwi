@@ -2,6 +2,7 @@
 
 <div class="page-header">
     <h1 class="page-title">Jadwal Penggajian Di Masa Mendatang</h1>
+    <smalll class="text-primary mt-2 text-center">Agar Jadwal Penggajian Di Masa Mendatang berjalan dengan baik, pastikan untuk menambahkan data komponen penggajian untuk semua pegawai dan lakukan penggajian setidaknya untuk pertama kali </smalll>
 </div>
 
 <div class="container mt-5">
@@ -10,7 +11,6 @@
 </div>
 
 <script>
-    // Fungsi helper untuk format tanggal
 function formatTanggalIndonesia(dateString) {
     var options = { day: 'numeric', month: 'long', year: 'numeric' };
     var tanggal = new Date(dateString);

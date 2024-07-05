@@ -35,6 +35,26 @@ CREATE TABLE `histori_gaji` (
   `keterangan` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `pegawai` (
+  `id` int NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `jabatan` varchar(100) NOT NULL,
+  `nomor_identifikasi` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `nomor_telepon` varchar(20) DEFAULT NULL,
+  `alamat` text,
+  `periode_pembayaran` enum('bulanan','triwulanan','tahunan') DEFAULT NULL,
+  `foto_pegawai` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `user` (
+  `id_admin` int NOT NULL,
+  `nama` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 CREATE TABLE `kategori` (
   `id` int NOT NULL,
   `nama_kategori` varchar(50) DEFAULT NULL
@@ -66,22 +86,3 @@ CREATE TABLE `laporan_penggajian` (
   `total_potongan` decimal(15,0) DEFAULT NULL,
   `total_bonus` decimal(15,0) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `pegawai` (
-  `id` int NOT NULL,
-  `nama` varchar(100) NOT NULL,
-  `jabatan` varchar(100) NOT NULL,
-  `nomor_identifikasi` varchar(50) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `nomor_telepon` varchar(20) DEFAULT NULL,
-  `alamat` text,
-  `periode_pembayaran` enum('bulanan','triwulanan','tahunan') DEFAULT NULL,
-  `foto_pegawai` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `user` (
-  `id_admin` int NOT NULL,
-  `nama` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

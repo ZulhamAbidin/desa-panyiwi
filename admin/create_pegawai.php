@@ -10,6 +10,12 @@ $nomor_telepon = '';
 $alamat = '';
 $periode_pembayaran = '';
 $file_path = '';
+$pendidikan_terakhir = ''; // Ditambahkan
+$status_pernikahan = ''; // Ditambahkan
+$agama = ''; // Ditambahkan
+$tempat_lahir = ''; // Ditambahkan
+$tanggal_lahir = ''; // Ditambahkan
+$jenis_kelamin = ''; // Ditambahkan
 $error_message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -20,6 +26,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nomor_telepon = $_POST['nomor_telepon'];
     $alamat = $_POST['alamat'];
     $periode_pembayaran = $_POST['periode_pembayaran'];
+    $pendidikan_terakhir = $_POST['pendidikan_terakhir']; // Ditambahkan
+    $status_pernikahan = $_POST['status_pernikahan']; // Ditambahkan
+    $agama = $_POST['agama']; // Ditambahkan
+    $tempat_lahir = $_POST['tempat_lahir']; // Ditambahkan
+    $tanggal_lahir = $_POST['tanggal_lahir']; // Ditambahkan
+    $jenis_kelamin = $_POST['jenis_kelamin']; // Ditambahkan
 
     $uploadDir = __DIR__ . '/gambar/';
     $file_path = '';
@@ -50,8 +62,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
     } else {
-        $sql = "INSERT INTO pegawai (nama, jabatan, nomor_identifikasi, email, nomor_telepon, alamat, periode_pembayaran, foto_pegawai) 
-                VALUES ('$nama', '$jabatan', '$nomor_identifikasi', '$email', '$nomor_telepon', '$alamat', '$periode_pembayaran', '$file_path')";
+
+        $sql = "INSERT INTO pegawai (nama, jabatan, nomor_identifikasi, email, nomor_telepon, alamat, periode_pembayaran, foto_pegawai, pendidikan_terakhir, status_pernikahan, agama, tempat_lahir, tanggal_lahir, jenis_kelamin) 
+                VALUES ('$nama', '$jabatan', '$nomor_identifikasi', '$email', '$nomor_telepon', '$alamat', '$periode_pembayaran', '$file_path', '$pendidikan_terakhir', '$status_pernikahan', '$agama', '$tempat_lahir', '$tanggal_lahir', '$jenis_kelamin')";
         
         if ($koneksi->query($sql) === true) {
             $_SESSION['success_message'] = "Pegawai baru berhasil disimpan!";
@@ -102,6 +115,58 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <option value="bulanan" <?php echo ($periode_pembayaran == 'bulanan') ? 'selected' : ''; ?>>Bulanan</option>
                         <option value="triwulanan" <?php echo ($periode_pembayaran == 'triwulanan') ? 'selected' : ''; ?>>Triwulanan</option>
                         <option value="tahunan" <?php echo ($periode_pembayaran == 'tahunan') ? 'selected' : ''; ?>>Tahunan</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-6 mt-2">
+                    <label for="pendidikan_terakhir">Pendidikan Terakhir:</label>
+                    <select class="form-control" id="pendidikan_terakhir" name="pendidikan_terakhir">
+                        <option value="">Pilih Pendidikan Terakhir</option>
+                        <option value="TK" <?php echo ($pendidikan_terakhir == 'TK') ? 'selected' : ''; ?>>TK</option>
+                        <option value="SD" <?php echo ($pendidikan_terakhir == 'SD') ? 'selected' : ''; ?>>SD</option>
+                        <option value="SMP" <?php echo ($pendidikan_terakhir == 'SMP') ? 'selected' : ''; ?>>SMP</option>
+                        <option value="SMA" <?php echo ($pendidikan_terakhir == 'SMA') ? 'selected' : ''; ?>>SMA</option>
+                        <option value="Diploma 3" <?php echo ($pendidikan_terakhir == 'Diploma 3') ? 'selected' : ''; ?>>Diploma 3</option>
+                        <option value="Diploma 4" <?php echo ($pendidikan_terakhir == 'Diploma 4') ? 'selected' : ''; ?>>Diploma 4</option>
+                        <option value="Strata 1" <?php echo ($pendidikan_terakhir == 'Strata 1') ? 'selected' : ''; ?>>Strata 1</option>
+                        <option value="Strata 2" <?php echo ($pendidikan_terakhir == 'Strata 2') ? 'selected' : ''; ?>>Strata 2</option>
+                        <option value="Strata 3" <?php echo ($pendidikan_terakhir == 'Strata 3') ? 'selected' : ''; ?>>Strata 3</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-6 mt-2">
+                    <label for="status_pernikahan">Status Pernikahan:</label>
+                    <select class="form-control" id="status_pernikahan" name="status_pernikahan">
+                        <option value="">Pilih Status Pernikahan</option>
+                        <option value="Belum Menikah" <?php echo ($status_pernikahan == 'Belum Menikah') ? 'selected' : ''; ?>>Belum Menikah</option>
+                        <option value="Menikah" <?php echo ($status_pernikahan == 'Menikah') ? 'selected' : ''; ?>>Menikah</option>
+                        <option value="Cerai" <?php echo ($status_pernikahan == 'Cerai') ? 'selected' : ''; ?>>Cerai</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-6 mt-2">
+                    <label for="agama">Agama:</label>
+                    <select class="form-control" id="agama" name="agama">
+                        <option value="">Pilih Agama</option>
+                        <option value="Islam" <?php echo ($agama == 'Islam') ? 'selected' : ''; ?>>Islam</option>
+                        <option value="Kristen" <?php echo ($agama == 'Kristen') ? 'selected' : ''; ?>>Kristen</option>
+                        <option value="Katolik" <?php echo ($agama == 'Katolik') ? 'selected' : ''; ?>>Katolik</option>
+                        <option value="Hindu" <?php echo ($agama == 'Hindu') ? 'selected' : ''; ?>>Hindu</option>
+                        <option value="Buddha" <?php echo ($agama == 'Buddha') ? 'selected' : ''; ?>>Buddha</option>
+                        <option value="Khonghucu" <?php echo ($agama == 'Khonghucu') ? 'selected' : ''; ?>>Khonghucu</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-6 mt-2">
+                    <label for="tempat_lahir">Tempat Lahir:</label>
+                    <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="<?php echo htmlspecialchars($tempat_lahir); ?>">
+                </div>
+                <div class="col-12 col-md-6 mt-2">
+                    <label for="tanggal_lahir">Tanggal Lahir:</label>
+                    <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="<?php echo htmlspecialchars($tanggal_lahir); ?>">
+                </div>
+                <div class="col-12 col-md-6 mt-2">
+                    <label for="jenis_kelamin">Jenis Kelamin:</label>
+                    <select class="form-control" id="jenis_kelamin" name="jenis_kelamin">
+                        <option value="">Pilih Jenis Kelamin</option>
+                        <option value="Laki-laki" <?php echo ($jenis_kelamin == 'Laki-laki') ? 'selected' : ''; ?>>Laki-laki</option>
+                        <option value="Perempuan" <?php echo ($jenis_kelamin == 'Perempuan') ? 'selected' : ''; ?>>Perempuan</option>
                     </select>
                 </div>
                 <div class="col-12 col-md-12 mt-2">

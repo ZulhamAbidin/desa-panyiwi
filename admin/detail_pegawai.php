@@ -2,17 +2,16 @@
 include 'src/header.php';
 include '../koneksi.php';
 
-// Ambil pegawai_id dari parameter URL 'id'
 $id_pegawai = isset($_GET['id']) ? $_GET['id'] : 0;
 
-$sql = "SELECT nama, jabatan, nomor_identifikasi, email, nomor_telepon, alamat, periode_pembayaran, foto_pegawai FROM pegawai WHERE id = ?";
+$sql = "SELECT nama, jabatan, nomor_identifikasi, email, nomor_telepon, alamat, periode_pembayaran, foto_pegawai, pendidikan_terakhir, status_pernikahan, agama, tempat_lahir, tanggal_lahir, jenis_kelamin FROM pegawai WHERE id = ?";
 $stmt = $koneksi->prepare($sql);
 $stmt->bind_param("i", $id_pegawai);
 $stmt->execute();
 $stmt->store_result();
 
 if ($stmt->num_rows > 0) {
-    $stmt->bind_result($nama, $jabatan, $nomor_identifikasi, $email, $nomor_telepon, $alamat, $periode_pembayaran, $foto_pegawai);
+    $stmt->bind_result($nama, $jabatan, $nomor_identifikasi, $email, $nomor_telepon, $alamat, $periode_pembayaran, $foto_pegawai, $pendidikan_terakhir, $status_pernikahan, $agama, $tempat_lahir, $tanggal_lahir, $jenis_kelamin);
     $stmt->fetch();
 } else {
     $_SESSION['error_message'] = "Pegawai tidak ditemukan.";
@@ -32,71 +31,111 @@ $pegawai_id = $id_pegawai;
 
     <div class="row">
 
-        <div class="col-12 col-md-4">
-            <div class="card">
-
-                <div class="card-body text-center">
-                    <?php if (!empty($foto_pegawai)) : ?>
-
-                    <div class="avatar avatar-xxl brround cover-image mb-4"
-                        style="background: url('gambar/<?php echo htmlspecialchars($foto_pegawai); ?>') center top / cover; width: 150px; height: 150px;">
-                    </div>
-
-                    <?php else : ?>
-
-                    <div class="avatar avatar-xxl brround cover-image"
-                        style="background: url('gambar/default.jpg') center top / cover; width: 250px; height: 250px;">
-                    </div>
-
-                    <?php endif; ?>
-
-                    <div class="text-left mt-4">
-                        <h4 class="h4 mb-0 mt-3"><?php echo htmlspecialchars($nama); ?></h4>
-                        <p class="card-text"><?php echo htmlspecialchars($jabatan); ?></p>
-                    </div>
+    <div class="col-12 col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <?php if (!empty($foto_pegawai)) : ?>
+                <div class="avatar avatar-xxl brround cover-image mb-4" style="background: url('gambar/<?php echo htmlspecialchars($foto_pegawai); ?>') center top / cover; width: 150px; height: 150px;">
+                </div>
+                <?php else : ?>
+                <div class="avatar avatar-xxl brround cover-image" style="background: url('gambar/default.jpg') center top / cover; width: 250px; height: 250px;">
+                </div>
+                <?php endif; ?>
+                <div class="text-left mt-4">
+                    <h4 class="h4 mb-0 mt-3"><?php echo htmlspecialchars($nama); ?></h4>
+                    <p class="card-text"><?php echo htmlspecialchars($jabatan); ?></p>
                 </div>
             </div>
+        </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Kontak</div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Kontak</div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3 mt-3">
+                    <div class="me-4 text-center text-primary">
+                        <span><i class="fe fe-briefcase fs-20"></i></span>
+                    </div>
+                    <div>
+                        <strong><?php echo htmlspecialchars($nomor_identifikasi); ?></strong>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3 mt-3">
-                        <div class="me-4 text-center text-primary">
-                            <span><i class="fe fe-briefcase fs-20"></i></span>
-                        </div>
-                        <div>
-                            <strong><?php echo htmlspecialchars($nomor_identifikasi); ?></strong>
-                        </div>
+                <div class="d-flex align-items-center mb-3 mt-3">
+                    <div class="me-4 text-center text-primary">
+                        <span><i class="fe fe-map-pin fs-20"></i></span>
                     </div>
-                    <div class="d-flex align-items-center mb-3 mt-3">
-                        <div class="me-4 text-center text-primary">
-                            <span><i class="fe fe-map-pin fs-20"></i></span>
-                        </div>
-                        <div>
-                            <strong><?php echo htmlspecialchars($alamat); ?></strong>
-                        </div>
+                    <div>
+                        <strong><?php echo htmlspecialchars($alamat); ?></strong>
                     </div>
-                    <div class="d-flex align-items-center mb-3 mt-3">
-                        <div class="me-4 text-center text-primary">
-                            <span><i class="fe fe-phone fs-20"></i></span>
-                        </div>
-                        <div>
-                            <strong><?php echo htmlspecialchars($nomor_telepon); ?> </strong>
-                        </div>
+                </div>
+                <div class="d-flex align-items-center mb-3 mt-3">
+                    <div class="me-4 text-center text-primary">
+                        <span><i class="fe fe-phone fs-20"></i></span>
                     </div>
-                    <div class="d-flex align-items-center mb-3 mt-3">
-                        <div class="me-4 text-center text-primary">
-                            <span><i class="fe fe-mail fs-20"></i></span>
-                        </div>
-                        <div>
-                            <strong><?php echo htmlspecialchars($email); ?> </strong>
-                        </div>
+                    <div>
+                        <strong><?php echo htmlspecialchars($nomor_telepon); ?> </strong>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3 mt-3">
+                    <div class="me-4 text-center text-primary">
+                        <span><i class="fe fe-mail fs-20"></i></span>
+                    </div>
+                    <div>
+                        <strong><?php echo htmlspecialchars($email); ?> </strong>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3 mt-3">
+                    <div class="me-4 text-center text-primary">
+                        <span><i class="fe fe-book fs-20"></i></span>
+                    </div>
+                    <div>
+                        <strong><?php echo htmlspecialchars($pendidikan_terakhir); ?> </strong>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3 mt-3">
+                    <div class="me-4 text-center text-primary">
+                        <span><i class="fe fe-heart fs-20"></i></span>
+                    </div>
+                    <div>
+                        <strong><?php echo htmlspecialchars($status_pernikahan); ?> </strong>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3 mt-3">
+                    <div class="me-4 text-center text-primary">
+                        <span><i class="fe fe-users fs-20"></i></span>
+                    </div>
+                    <div>
+                        <strong><?php echo htmlspecialchars($agama); ?> </strong>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3 mt-3">
+                    <div class="me-4 text-center text-primary">
+                        <span><i class="fe fe-map-pin fs-20"></i></span>
+                    </div>
+                    <div>
+                        <strong><?php echo htmlspecialchars($tempat_lahir); ?> </strong>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3 mt-3">
+                    <div class="me-4 text-center text-primary">
+                        <span><i class="fe fe-calendar fs-20"></i></span>
+                    </div>
+                    <div>
+                        <strong><?php echo htmlspecialchars($tanggal_lahir); ?> </strong>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3 mt-3">
+                    <div class="me-4 text-center text-primary">
+                        <span><i class="fe fe-user fs-20"></i></span>
+                    </div>
+                    <div>
+                        <strong><?php echo htmlspecialchars($jenis_kelamin); ?> </strong>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
         <div class="col-12 col-md-8">
             <div class="notification" id="notificationList">
