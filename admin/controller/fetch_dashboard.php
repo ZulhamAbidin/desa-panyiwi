@@ -4,19 +4,18 @@ include '../../koneksi.php';
 header('Content-Type: application/json');
 
 if (!$koneksi) {
-    http_response_code(500); // Internal Server Error
+    http_response_code(500);
     echo json_encode(['error' => 'Koneksi database gagal']);
     exit;
 }
 
-// Query untuk mendapatkan tahun-tahun yang memiliki data gaji pegawai
 $query_years = "SELECT DISTINCT YEAR(gp.periode) AS tahun
                FROM gaji_pegawai gp";
 
 $result_years = $koneksi->query($query_years);
 
 if (!$result_years) {
-    http_response_code(500); // Internal Server Error
+    http_response_code(500);
     echo json_encode(['error' => 'Query tahun gagal: ' . $koneksi->error]);
     exit;
 }
@@ -38,7 +37,7 @@ $query_data = "SELECT pegawai.nama, DATE_FORMAT(gp.periode, '%M %Y') AS periode,
 $result_data = $koneksi->query($query_data);
 
 if (!$result_data) {
-    http_response_code(500); // Internal Server Error
+    http_response_code(500);
     echo json_encode(['error' => 'Query data gagal: ' . $koneksi->error]);
     exit;
 }

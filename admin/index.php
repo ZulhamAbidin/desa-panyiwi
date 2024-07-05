@@ -7,6 +7,7 @@ function formatRupiah($angka)
     return 'Rp ' . number_format($angka, 0, ',', '.');
 }
 
+
 $queryDistinctYears = mysqli_query($koneksi, 'SELECT DISTINCT YEAR(periode) AS Year FROM laporan_keuangan ORDER BY Year DESC');
 $dataDistinctYears = [];
 while ($row = mysqli_fetch_array($queryDistinctYears)) {
@@ -43,8 +44,87 @@ $dataSummarySelectedYear = mysqli_fetch_array($querySummarySelectedYear);
 $totalAnggaranSelectedYear = $dataSummarySelectedYear['total_anggaran_selected'];
 $totalRealisasiSelectedYear = $dataSummarySelectedYear['total_realisasi_selected'];
 $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
-?>
 
+$queryTotal = mysqli_query($koneksi, "
+    SELECT 
+        SUM(anggaran) AS total_anggaran,
+        SUM(realisasi) AS total_realisasi,
+        SUM(selisih) AS total_selisih
+    FROM laporan_keuangan
+");
+
+// Menghitung total anggaran, realisasi, dan selisih dari tabel laporan_keuangan
+if ($queryTotal) {
+    $dataTotal = mysqli_fetch_assoc($queryTotal);
+    $total_anggaran = $dataTotal['total_anggaran'];
+    $total_realisasi = $dataTotal['total_realisasi'];
+    $total_selisih = $dataTotal['total_selisih'];
+
+    $formatted_total_anggaran = formatRupiah($total_anggaran);
+    $formatted_total_realisasi = formatRupiah($total_realisasi);
+    $formatted_total_selisih = formatRupiah($total_selisih);
+} else {
+    echo "Error: " . mysqli_error($koneksi);
+    $formatted_total_anggaran = formatRupiah(0);
+    $formatted_total_realisasi = formatRupiah(0);
+    $formatted_total_selisih = formatRupiah(0);
+}
+
+// Menghitung total gaji dari tabel gaji_pegawai
+$sqlTotalGaji = 'SELECT COUNT(*) AS total_gaji_pegawai FROM gaji_pegawai';
+$resultTotalGaji = $koneksi->query($sqlTotalGaji);
+if ($resultTotalGaji) {
+    $rowTotalGaji = $resultTotalGaji->fetch_assoc();
+    $totalGajiPegawai = $rowTotalGaji['total_gaji_pegawai'];
+} else {
+    $totalGajiPegawai = 0;
+    echo "Error: " . $koneksi->error;
+}
+
+// Menampilkan total gaji dalam format Rupiah
+$sqlTotalGajiAmount = 'SELECT SUM(total_gaji) AS total_gaji FROM gaji_pegawai';
+$resultTotalGajiAmount = $koneksi->query($sqlTotalGajiAmount);
+if ($resultTotalGajiAmount) {
+    $rowTotalGajiAmount = $resultTotalGajiAmount->fetch_assoc();
+    $total_gaji = $rowTotalGajiAmount['total_gaji'];
+    $formatted_total_gaji = formatRupiah($total_gaji);
+} else {
+    $formatted_total_gaji = formatRupiah(0);
+    echo "Error: " . $koneksi->error;
+}
+
+// Menghitung total data dari tabel user
+$sqlTotalUser = 'SELECT COUNT(*) AS total_user FROM user';
+$resultTotalUser = $koneksi->query($sqlTotalUser);
+$rowTotalUser = $resultTotalUser->fetch_assoc();
+$total_user = $rowTotalUser['total_user'];
+
+// Menghitung total data dari tabel pegawai
+$sqlTotalPegawai = 'SELECT COUNT(*) AS total_pegawai FROM pegawai';
+$resultTotalPegawai = $koneksi->query($sqlTotalPegawai);
+$rowTotalPegawai = $resultTotalPegawai->fetch_assoc();
+$total_pegawai = $rowTotalPegawai['total_pegawai'];
+
+// Menghitung total data dari tabel gaji_otomatis
+$sqlTotalKomponenGaji = 'SELECT COUNT(*) AS total_komponen_gaji FROM gaji_otomatis';
+$resultTotalKomponenGaji = $koneksi->query($sqlTotalKomponenGaji);
+$rowTotalKomponenGaji = $resultTotalKomponenGaji->fetch_assoc();
+$total_komponen_gaji = $rowTotalKomponenGaji['total_komponen_gaji'];
+
+// Menghitung total data dari tabel document
+$sqlTotalDocument = 'SELECT COUNT(*) AS total_document FROM document';
+$resultTotalDocument = $koneksi->query($sqlTotalDocument);
+$rowTotalDocument = $resultTotalDocument->fetch_assoc();
+$total_document = $rowTotalDocument['total_document'];
+
+// Menghitung total data dari tabel kategori
+$sqlTotalKategori = 'SELECT COUNT(*) AS total_kategori FROM kategori';
+$resultTotalKategori = $koneksi->query($sqlTotalKategori);
+$rowTotalKategori = $resultTotalKategori->fetch_assoc();
+$total_kategori = $rowTotalKategori['total_kategori'];
+
+$koneksi->close();
+?>
 
 
 <div class="container">
@@ -61,6 +141,142 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
 
     <div class="row">
 
+       
+
+        <!-- start card-->
+
+        <div class="col-6 col-md-6 col-lg-6 col-xl-6">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Total Anggaran</h6>
+                            <h2 class="mb-0 number-font"><?php echo $formatted_total_anggaran; ?></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-6 col-lg-6 col-xl-6">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Total Realisasi</h6>
+                            <h2 class="mb-0 number-font"><?php echo $formatted_total_realisasi; ?></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-6 col-lg-6 col-xl-6">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Total Selisih</h6>
+                            <h2 class="mb-0 number-font"><?php echo $formatted_total_selisih; ?></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-6 col-lg-6 col-xl-6">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Data Penggajian</h6>
+                            <h2 class="mb-0 number-font">
+                                <?php echo $totalGajiPegawai; ?>
+                                    <span class="fs-13 fw-semibold mx-2"> Total </span> 
+                                <?php echo $formatted_total_gaji; ?>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--------------------------------------------------->
+
+        <div class="col-6 col-md-3 col-lg-3 col-xl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Kategori</h6>
+                            <h2 class="mb-0 number-font" id=""> <?php echo $total_kategori; ?></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3 col-lg-3 col-xl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Data Operasional</h6>
+                            <h2 class="mb-0 number-font" id="totalDataKeuangan"></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="col-6 col-md-3 col-lg-3 col-xl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Admin</h6>
+                            <h2 class="mb-0 number-font" id="">  <?php echo $total_user; ?></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="col-6 col-md-3 col-lg-3 col-xl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Data Pegawai</h6>
+                            <h2 class="mb-0 number-font"> <?php echo $total_pegawai; ?> </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--------------------------------------------------->
+
+        
+
+        <div class="col-6 col-md-3 col-lg-3 col-xl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Dokumen Export</h6>
+                            <h2 class="mb-0 number-font"> <?php echo $total_document; ?> </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- end card-->
+
+        <!--------------------------------------------------->
+
+        <!-- start chart-->
         <div class="col-12">
             <div class="form-group">
                 <label for="tahunDropdown">Pilih Tahun:</label>
@@ -72,74 +288,6 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
                     }
                     ?>
                 </select>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-4">
-            <div class="card">
-                <div class="pt-4 fw-semibold">
-                    <h5 class="text-center pt-4 fw-semibold">Total Kategori</h5>
-                </div>
-                <div class="card-body">
-                    <h2 class="text-center" id="totalKategori">Loading...</h2 class="text-center">
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-4">
-            <div class="card">
-                <div class="pt-4 fw-semibold">
-                    <h5 class="text-center pt-4 fw-semibold">Total Data Operasional</h5>
-                </div>
-                <div class="card-body">
-                    <h2 class="text-center" id="totalDataKeuangan">Loading...</h2 class="text-center">
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-4">
-            <div class="card">
-                <div class="pt-4 fw-semibold">
-                    <h5 class="text-center pt-4 fw-semibold">User Admin</h5>
-                </div>
-                <div class="card-body">
-                    <h2 class="text-center" id="userAdmin">Loading...</h2 class="text-center">
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
-            <div class="card overflow-hidden">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="mt-2">
-                            <h6 class="">Total Users</h6>
-                            <h2 class="mb-0 number-font">44,278</h2>
-                        </div>
-                        <div class="ms-auto">
-                            <div class="chart-wrapper mt-1">
-                                <div class="chartjs-size-monitor"
-                                    style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
-                                    <div class="chartjs-size-monitor-expand"
-                                        style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
-                                        </div>
-                                    </div>
-                                    <div class="chartjs-size-monitor-shrink"
-                                        style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
-                                    </div>
-                                </div>
-                                <canvas id="saleschart" class="h-8 w-9 chart-dropshadow chartjs-render-monitor"
-                                    width="96" height="64"
-                                    style="display: block; width: 96px; height: 64px;"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    <span class="text-muted fs-12"><span class="text-secondary"><i
-                                class="fe fe-arrow-up-circle  text-secondary"></i> 5%</span>
-                        Last week</span>
-                </div>
             </div>
         </div>
 
@@ -169,6 +317,7 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
             </div>
         </div>
 
+        <!--------------------------------------------------->
 
         <div class="col-12">
             <div class="form-group">
@@ -190,6 +339,8 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
                 </div>
             </div>
         </div>
+
+        <!-- end chart-->
 
     </div>
 </div>

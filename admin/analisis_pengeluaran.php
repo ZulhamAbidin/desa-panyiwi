@@ -14,7 +14,7 @@
     <div class="card shadow">
         <div class="card-body">
             <div class="mb-4 text-center fw-bold">Analisis Pengeluaran Gaji Pegawai</div>
-            <div class="mb-4 text-center fw-semibold text-primary">Sebelum melakukan analisis berjalan dengan baik,
+            <div class="mb-4 text-center fw-semibold text-primary">Agar analisis berjalan dengan baik,
                 pastikan untuk menambahkan data komponen penggajian untuk semua pegawai dan lakukan penggajian
                 setidaknya untuk pertama kali.</div>
             <div class="text-center">
