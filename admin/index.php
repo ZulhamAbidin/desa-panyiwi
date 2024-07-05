@@ -142,7 +142,7 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
                 </div>
                 <div class="card-body">
                     <div class="chart-container">
-                        <canvas id="chartBar2xx"></canvas>
+                        <canvas id="chartBar2xx" width="800" height="400"></canvas>
                     </div>
                 </div>
             </div>
@@ -154,7 +154,6 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- jangankacau -->
 <script>
     fetch('controller/fetch_dashboard.php')
         .then(response => response.json())
@@ -165,17 +164,45 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
             const employeeNames = Object.keys(data.pegawai);
 
             employeeNames.forEach((nama, index) => {
+                let backgroundColor;
+                switch (index % 7) {
+                    case 0:
+                        backgroundColor = '#2B5F9B';
+                        break;
+                    case 1:
+                        backgroundColor = '#e74c3c';
+                        break;
+                    case 2:
+                        backgroundColor = '#f7b731';
+                        break;
+                    case 3:
+                        backgroundColor = '#09AD95';
+                        break;
+                    case 4:
+                        backgroundColor = '#05C3FB';
+                        break;
+                    case 5:
+                        backgroundColor = '#4ECC48';
+                        break;
+                    case 6:
+                        backgroundColor = '#1170E4';
+                        break;
+                    default:
+                        backgroundColor = '#2B5F9B';
+                }
+
                 datasets.push({
                     label: nama,
-                    backgroundColor: index % 3 === 0 ? '#2B5F9B' : index % 3 === 1 ? '#f7b731' : '#e74c3c',
+                    backgroundColor: backgroundColor,
                     data: labels.map(label => data.pegawai[nama][label] || 0)
                 });
             });
 
+
             const config = {
                 type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: labels.map(label => label),
                     datasets: datasets
                 },
                 options: {
@@ -189,7 +216,12 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
                         y: {
                             title: {
                                 display: true,
-                                text: 'Nama Pegawai'
+                                text: 'Total Gaji'
+                            },
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return 'Rp ' + new Intl.NumberFormat().format(value);
+                                }
                             }
                         }
                     },
@@ -223,8 +255,6 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
             console.error('Error fetching data:', error);
         });
 </script>
-
-
 
 
 
