@@ -27,7 +27,7 @@ $dataSummary = mysqli_fetch_array($querySummary);
 $totalAnggaran = $dataSummary['total_anggaran'];
 $totalRealisasi = $dataSummary['total_realisasi'];
 
-$tahunTerbaru = mysqli_real_escape_string($koneksi, $tahunTerbaru); 
+$tahunTerbaru = mysqli_real_escape_string($koneksi, $tahunTerbaru);
 $querySummarySelectedYear = mysqli_query(
     $koneksi,
     "
@@ -44,6 +44,8 @@ $totalAnggaranSelectedYear = $dataSummarySelectedYear['total_anggaran_selected']
 $totalRealisasiSelectedYear = $dataSummarySelectedYear['total_realisasi_selected'];
 $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
 ?>
+
+
 
 <div class="container">
 
@@ -132,162 +134,271 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
             </div>
         </div>
 
+
+        <div class="col-lg-12 col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="align-middle">Gaji Pegawai</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="chartBar2xx"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- jangankacau -->
 <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var ctx = document.getElementById('chartBar2').getContext('2d');
-            var myChart = new Chart(ctx, {
+    fetch('controller/fetch_dashboard.php')
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.period;
+            const datasets = [];
+
+            const employeeNames = Object.keys(data.pegawai);
+
+            employeeNames.forEach((nama, index) => {
+                datasets.push({
+                    label: nama,
+                    backgroundColor: index % 3 === 0 ? '#2B5F9B' : index % 3 === 1 ? '#f7b731' : '#e74c3c',
+                    data: labels.map(label => data.pegawai[nama][label] || 0)
+                });
+            });
+
+            const config = {
                 type: 'bar',
                 data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Anggaran',
-                        backgroundColor: '#2B5F9B',
-                        data: []
-                    }, {
-                        label: 'Realisasi',
-                        backgroundColor: '#f7b731',
-                        data: []
-                    }, {
-                        label: 'Selisih',
-                        backgroundColor: '#e74c3c',
-                        data: []
-                    }]
-
+                    labels: labels,
+                    datasets: datasets
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
                     scales: {
-                        xAxes: [{
-                            ticks: {
-                                beginAtZero: true
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Periode'
                             }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true,
-                                callback: function (value) {
-                                    return 'Rp ' + value.toLocaleString();
-                                }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Nama Pegawai'
                             }
-                        }]
+                        }
                     },
-                    tooltips: {
-                        callbacks: {
-                            label: function (tooltipItem, data) {
-                                var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-                                return datasetLabel + ': Rp ' + tooltipItem.yLabel.toLocaleString();
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += 'Rp ' + new Intl.NumberFormat().format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
                             }
                         }
                     }
                 }
-            });
+            };
 
-            var ctxPie = document.getElementById('chartPie').getContext('2d');
-            var myPieChart = new Chart(ctxPie, {
-                type: 'pie',
-                data: {
-                    labels: ['Label 1', 'Label 2', 'Label 3'],
-                    datasets: [{
-                        label: 'Persentase',
-                        backgroundColor: ['#2ecc71', '#3498db',
-                            '#e74c3c'
-                        ],
-                        data: [, , ]
+            const ctx = document.getElementById('chartBar2xx').getContext('2d');
+            new Chart(ctx, config);
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var ctx = document.getElementById('chartBar2').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Anggaran',
+                    backgroundColor: '#2B5F9B',
+                    data: []
+                }, {
+                    label: 'Realisasi',
+                    backgroundColor: '#f7b731',
+                    data: []
+                }, {
+                    label: 'Selisih',
+                    backgroundColor: '#e74c3c',
+                    data: []
+                }]
+
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            callback: function(value) {
+                                return 'Rp ' + value.toLocaleString();
+                            }
+                        }
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    tooltips: {
-                        callbacks: {
-                            label: function (tooltipItem, data) {
-                                var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
-                                var currentValue = data.datasets[tooltipItem.datasetIndex].data[
-                                    tooltipItem.index];
-
-                                function formatRupiah(angka) {
-                                    var reverse = angka.toString().split('').reverse().join('');
-                                    var ribuan = reverse.match(/\d{1,3}/g);
-                                    ribuan = ribuan.join('.').split('').reverse().join('');
-                                    return 'Rp ' + ribuan;
-                                }
-
-                                return datasetLabel + ': ' + formatRupiah(currentValue);
-                            }
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                            return datasetLabel + ': Rp ' + tooltipItem.yLabel.toLocaleString();
                         }
                     }
+                }
+            }
+        });
 
+        var ctxPie = document.getElementById('chartPie').getContext('2d');
+        var myPieChart = new Chart(ctxPie, {
+            type: 'pie',
+            data: {
+                labels: ['Label 1', 'Label 2', 'Label 3'],
+                datasets: [{
+                    label: 'Persentase',
+                    backgroundColor: ['#2ecc71', '#3498db',
+                        '#e74c3c'
+                    ],
+                    data: [, , ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+                            var currentValue = data.datasets[tooltipItem.datasetIndex].data[
+                                tooltipItem.index];
+
+                            function formatRupiah(angka) {
+                                var reverse = angka.toString().split('').reverse().join('');
+                                var ribuan = reverse.match(/\d{1,3}/g);
+                                ribuan = ribuan.join('.').split('').reverse().join('');
+                                return 'Rp ' + ribuan;
+                            }
+
+                            return datasetLabel + ': ' + formatRupiah(currentValue);
+                        }
+                    }
+                }
+
+            }
+        });
+
+        function updateChart() {
+            var selectedYear = $("#tahunDropdown").val();
+            $.ajax({
+                type: 'POST',
+                url: 'ajax_update_chart.php',
+                data: {
+                    year: selectedYear
+                },
+                success: function(response) {
+                    myChart.data.labels = response.labels;
+                    myChart.data.datasets[0].data = response.anggaran;
+                    myChart.data.datasets[1].data = response.realisasi;
+
+                    var selisihData = response.selisih.map(function(value) {
+                        return Math.abs(
+                            value);
+                    });
+                    myChart.data.datasets[2].data = selisihData;
+
+                    myChart.update();
+
+                    myPieChart.data.labels = response.labels.slice(0,
+                        5);
+                    myPieChart.data.datasets[0].data = response.realisasi.slice(0,
+                        5);
+                    myPieChart.update();
+                },
+
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
                 }
             });
+        }
 
-            function updateChart() {
-                var selectedYear = $("#tahunDropdown").val();
-                $.ajax({
-                    type: 'POST',
-                    url: 'ajax_update_chart.php',
-                    data: {
-                        year: selectedYear
-                    },
-                    success: function (response) {
-                        myChart.data.labels = response.labels;
-                        myChart.data.datasets[0].data = response.anggaran;
-                        myChart.data.datasets[1].data = response.realisasi;
+        updateChart();
 
-                        var selisihData = response.selisih.map(function (value) {
-                            return Math.abs(
-                                value);
-                        });
-                        myChart.data.datasets[2].data = selisihData;
-
-                        myChart.update();
-
-                        myPieChart.data.labels = response.labels.slice(0,
-                            5);
-                        myPieChart.data.datasets[0].data = response.realisasi.slice(0,
-                            5);
-                        myPieChart.update();
-                    },
-
-                    error: function (xhr, status, error) {
-                        console.error(xhr.responseText);
-                    }
-                });
-            }
-
+        $("#tahunDropdown").on("change", function() {
             updateChart();
-
-            $("#tahunDropdown").on("change", function () {
-                updateChart();
-            });
-
-
-            function loadDashboardData() {
-                $.ajax({
-                    url: 'controller/get-dashboard.php',
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (response) {
-                        $('#totalKategori').html(response.totalkategori);
-                        $('#totalDataKeuangan').html(response.totaldatakeuangan);
-                        $('#userAdmin').html(response.useradmin);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('Error fetching dashboard data:', error);
-                    }
-                });
-            }
-
-            loadDashboardData();
-
-            $('#refreshDashboard').click(function () {
-                loadDashboardData();
-            });
         });
+
+
+        function loadDashboardData() {
+            $.ajax({
+                url: 'controller/get-dashboard.php',
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    $('#totalKategori').html(response.totalkategori);
+                    $('#totalDataKeuangan').html(response.totaldatakeuangan);
+                    $('#userAdmin').html(response.useradmin);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching dashboard data:', error);
+                }
+            });
+        }
+
+        loadDashboardData();
+
+        $('#refreshDashboard').click(function() {
+            loadDashboardData();
+        });
+    });
 </script>
 <?php include 'src/footer.php'; ?>
