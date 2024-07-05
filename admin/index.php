@@ -89,7 +89,7 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
         <div class="col-lg-4 col-md-4">
             <div class="card">
                 <div class="pt-4 fw-semibold">
-                    <h5 class="text-center pt-4 fw-semibold">Total Data Keuangan</h5>
+                    <h5 class="text-center pt-4 fw-semibold">Total Data Operasional</h5>
                 </div>
                 <div class="card-body">
                     <h2 class="text-center" id="totalDataKeuangan">Loading...</h2 class="text-center">
@@ -104,6 +104,41 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
                 </div>
                 <div class="card-body">
                     <h2 class="text-center" id="userAdmin">Loading...</h2 class="text-center">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+            <div class="card overflow-hidden">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="mt-2">
+                            <h6 class="">Total Users</h6>
+                            <h2 class="mb-0 number-font">44,278</h2>
+                        </div>
+                        <div class="ms-auto">
+                            <div class="chart-wrapper mt-1">
+                                <div class="chartjs-size-monitor"
+                                    style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                                    <div class="chartjs-size-monitor-expand"
+                                        style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0">
+                                        </div>
+                                    </div>
+                                    <div class="chartjs-size-monitor-shrink"
+                                        style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                                    </div>
+                                </div>
+                                <canvas id="saleschart" class="h-8 w-9 chart-dropshadow chartjs-render-monitor"
+                                    width="96" height="64"
+                                    style="display: block; width: 96px; height: 64px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="text-muted fs-12"><span class="text-secondary"><i
+                                class="fe fe-arrow-up-circle  text-secondary"></i> 5%</span>
+                        Last week</span>
                 </div>
             </div>
         </div>
@@ -135,6 +170,14 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
         </div>
 
 
+        <div class="col-12">
+            <div class="form-group">
+                <label for="selectYear">Pilih Tahun:</label>
+                <select class="form-control" id="selectYear">
+                </select>
+            </div>
+        </div>
+
         <div class="col-lg-12 col-md-12">
             <div class="card">
                 <div class="card-header">
@@ -142,7 +185,7 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
                 </div>
                 <div class="card-body">
                     <div class="chart-container">
-                        <canvas id="chartBar2xx" width="800" height="400"></canvas>
+                        <canvas id="chartBar" width="800" height="400"></canvas>
                     </div>
                 </div>
             </div>
@@ -155,143 +198,161 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!-- ok -->
+<!-- baru -->
+
 
 <script>
-    fetch('controller/fetch_dashboard.php')
-        .then(response => response.json())
-        .then(data => {
-            const labels = data.period;
-            const datasets = [];
+    let chartInstance = null;
 
-            const employeeNames = Object.keys(data.pegawai);
-
-            employeeNames.forEach((nama, index) => {
-                let backgroundColor;
-                switch (index % 7) {
-                    case 0:
-                        backgroundColor = '#2B5F9B';
-                        break;
-                    case 1:
-                        backgroundColor = '#e74c3c';
-                        break;
-                    case 2:
-                        backgroundColor = '#f7b731';
-                        break;
-                    case 3:
-                        backgroundColor = '#09AD95';
-                        break;
-                    case 4:
-                        backgroundColor = '#343A40';
-                        break;
-                    case 5:
-                        backgroundColor = '#4ECC48';
-                        break;
-                    case 6:
-                        backgroundColor = '#1170E4';
-                        break;
-                    default:
-                        backgroundColor = '#2B5F9B';
-                }
-
-                datasets.push({
-                    label: nama,
-                    backgroundColor: backgroundColor,
-                    data: labels.map(label => data.pegawai[nama][label] || 0)
-                });
+    function fetchDataByYear(year) {
+        fetch(`controller/fetch_dashboard.php?year=${year}`)
+            .then(response => response.json())
+            .then(data => {
+                populateYearDropdown(data.years, year);
+                drawChart(data.data);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
             });
+    }
 
+    function drawChart(data) {
+        const labels = data.period;
+        const datasets = [];
 
-            const config = {
-                type: 'bar',
-                data: {
-                    labels: labels.map(label => label),
-                    datasets: datasets
-                },
-                options: {
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Periode',
-                                color: 'black'
-                            },
-                            ticks: {
-                                color: 'black'
-                            }
+        const employeeNames = Object.keys(data.pegawai);
+
+        employeeNames.forEach((nama, index) => {
+            let backgroundColor;
+            switch (index % 7) {
+                case 0:
+                    backgroundColor = '#2B5F9B';
+                    break;
+                case 1:
+                    backgroundColor = '#e74c3c';
+                    break;
+                case 2:
+                    backgroundColor = '#f7b731';
+                    break;
+                case 3:
+                    backgroundColor = '#09AD95';
+                    break;
+                case 4:
+                    backgroundColor = '#343A40';
+                    break;
+                case 5:
+                    backgroundColor = '#4ECC48';
+                    break;
+                case 6:
+                    backgroundColor = '#1170E4';
+                    break;
+                default:
+                    backgroundColor = '#2B5F9B';
+            }
+
+            datasets.push({
+                label: nama,
+                backgroundColor: backgroundColor,
+                data: labels.map(label => data.pegawai[nama][label] || 0)
+            });
+        });
+
+        const config = {
+            type: 'bar',
+            data: {
+                labels: labels.map(label => label),
+                datasets: datasets
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Periode',
+                            color: 'black'
                         },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Total Gaji',
-                                color: 'black'
-                            },
-                            ticks: {
-                                callback: function(value, index, values) {
-                                    return 'Rp ' + new Intl.NumberFormat().format(value);
-                                },
-                                color: 'black'
-                            }
+                        ticks: {
+                            color: 'black'
                         }
                     },
-                    plugins: {
-                        legend: {
+                    y: {
+                        title: {
                             display: true,
-                            position: 'bottom',
-                            labels: {
-                                color: 'black' // Warna teks untuk label legenda
-                            },
-                            padding: {
-                                top: 100, // Jarak margin di atas legenda
-                                bottom: 100 // Jarak margin di bawah legenda
-                            }
+                            text: 'Total Gaji',
+                            color: 'black'
                         },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += 'Rp ' + new Intl.NumberFormat().format(context.parsed.y);
-                                    }
-                                    return label;
+                        ticks: {
+                            callback: function(value, index, values) {
+                                return 'Rp ' + new Intl.NumberFormat().format(value);
+                            },
+                            color: 'black'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            color: 'black'
+                        },
+                        padding: {
+                            top: 100,
+                            bottom: 100
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
                                 }
+                                if (context.parsed.y !== null) {
+                                    label += 'Rp ' + new Intl.NumberFormat().format(context.parsed.y);
+                                }
+                                return label;
                             }
                         }
                     }
                 }
-            };
+            }
+        };
 
-            const ctx = document.getElementById('chartBar2xx').getContext('2d');
-            new Chart(ctx, config);
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
+        const ctx = document.getElementById('chartBar').getContext('2d');
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+        chartInstance = new Chart(ctx, config);
+    }
+
+    function populateYearDropdown(years, defaultYear) {
+        const selectYear = document.getElementById('selectYear');
+        selectYear.innerHTML = '';
+
+        years.forEach(year => {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            selectYear.appendChild(option);
         });
+
+        if (defaultYear) {
+            selectYear.value = defaultYear;
+        } else {
+            selectYear.value = years[0];
+        }
+    }
+
+    document.getElementById('selectYear').addEventListener('change', function() {
+        const selectedYear = this.value;
+        fetchDataByYear(selectedYear);
+    });
+
+    // Panggil pertama kali untuk mengisi dropdown dan data chart
+    const currentYear = new Date().getFullYear();
+    fetchDataByYear(currentYear);
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
