@@ -158,114 +158,117 @@ $totalSelisihSelectedYear = $dataSummarySelectedYear['total_selisih_selected'];
 
 <script>
     fetch('controller/fetch_dashboard.php')
-    .then(response => response.json())
-    .then(data => {
-        const labels = data.period;
-        const datasets = [];
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.period;
+            const datasets = [];
 
-        const employeeNames = Object.keys(data.pegawai);
+            const employeeNames = Object.keys(data.pegawai);
 
-        employeeNames.forEach((nama, index) => {
-            let backgroundColor;
-            switch (index % 7) {
-                case 0:
-                    backgroundColor = '#2B5F9B';
-                    break;
-                case 1:
-                    backgroundColor = '#e74c3c';
-                    break;
-                case 2:
-                    backgroundColor = '#f7b731';
-                    break;
-                case 3:
-                    backgroundColor = '#09AD95';
-                    break;
-                case 4:
-                    backgroundColor = '#343A40';
-                    break;
-                case 5:
-                    backgroundColor = '#4ECC48';
-                    break;
-                case 6:
-                    backgroundColor = '#1170E4';
-                    break;
-                default:
-                    backgroundColor = '#2B5F9B';
-            }
+            employeeNames.forEach((nama, index) => {
+                let backgroundColor;
+                switch (index % 7) {
+                    case 0:
+                        backgroundColor = '#2B5F9B';
+                        break;
+                    case 1:
+                        backgroundColor = '#e74c3c';
+                        break;
+                    case 2:
+                        backgroundColor = '#f7b731';
+                        break;
+                    case 3:
+                        backgroundColor = '#09AD95';
+                        break;
+                    case 4:
+                        backgroundColor = '#343A40';
+                        break;
+                    case 5:
+                        backgroundColor = '#4ECC48';
+                        break;
+                    case 6:
+                        backgroundColor = '#1170E4';
+                        break;
+                    default:
+                        backgroundColor = '#2B5F9B';
+                }
 
-            datasets.push({
-                label: nama,
-                backgroundColor: backgroundColor,
-                data: labels.map(label => data.pegawai[nama][label] || 0)
+                datasets.push({
+                    label: nama,
+                    backgroundColor: backgroundColor,
+                    data: labels.map(label => data.pegawai[nama][label] || 0)
+                });
             });
-        });
 
 
-        const config = {
-            type: 'bar',
-            data: {
-                labels: labels.map(label => label),
-                datasets: datasets
-            },
-            options: {
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Periode',
-                            color: 'black' // Warna teks untuk judul sumbu x
-                        },
-                        ticks: {
-                            color: 'black' // Warna teks untuk label sumbu x
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Total Gaji',
-                            color: 'black' // Warna teks untuk judul sumbu y
-                        },
-                        ticks: {
-                            callback: function(value, index, values) {
-                                return 'Rp ' + new Intl.NumberFormat().format(value);
-                            },
-                            color: 'black' // Warna teks untuk label sumbu y
-                        }
-                    }
+            const config = {
+                type: 'bar',
+                data: {
+                    labels: labels.map(label => label),
+                    datasets: datasets
                 },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: {
-                            color: 'black' // Warna teks untuk legenda
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Periode',
+                                color: 'black'
+                            },
+                            ticks: {
+                                color: 'black'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Total Gaji',
+                                color: 'black'
+                            },
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return 'Rp ' + new Intl.NumberFormat().format(value);
+                                },
+                                color: 'black'
+                            }
                         }
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                color: 'black' // Warna teks untuk label legenda
+                            },
+                            padding: {
+                                top: 100, // Jarak margin di atas legenda
+                                bottom: 100 // Jarak margin di bawah legenda
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += 'Rp ' + new Intl.NumberFormat().format(context.parsed.y);
+                                    }
+                                    return label;
                                 }
-                                if (context.parsed.y !== null) {
-                                    label += 'Rp ' + new Intl.NumberFormat().format(context.parsed.y);
-                                }
-                                return label;
                             }
                         }
                     }
                 }
-            }
-        };
+            };
 
-        const ctx = document.getElementById('chartBar2xx').getContext('2d');
-        new Chart(ctx, config);
-    })
-    .catch(error => {
-        console.error('Error fetching data:', error);
-    });
-
+            const ctx = document.getElementById('chartBar2xx').getContext('2d');
+            new Chart(ctx, config);
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
 </script>
 
 
